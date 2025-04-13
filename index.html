@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TTToken Airdrop</title>
   <style>
     body {
@@ -15,44 +15,35 @@
       background-color: #a00;
       padding: 1rem;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
-    }
-    .scoreboard {
-      text-align: center;
-      background-color: #222;
-      padding: 1rem;
-      font-size: 1.2rem;
-    }
-    .stars {
-      color: gold;
-      font-size: 1.5rem;
     }
     .logo-box {
       text-align: center;
-      margin: 20px 0;
+      margin: 10px 0;
     }
-    .logo-box img {
-      width: 120px;
-      height: auto;
+    .logo-box svg {
+      width: 80px;
+      height: 80px;
     }
     .logo-box .year {
-      margin-top: 5px;
-      font-size: 18px;
+      font-size: 16px;
       color: #aaa;
     }
     nav {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       background-color: #222;
     }
     nav button {
-      flex: 1;
+      flex: 1 1 25%;
       padding: 1rem;
       border: none;
       background: #222;
       color: white;
       cursor: pointer;
+      font-size: 0.9rem;
     }
     nav button.active, nav button:hover {
       background-color: #a00;
@@ -60,62 +51,87 @@
     section {
       display: none;
       padding: 2rem;
-      max-width: 800px;
+      max-width: 600px;
       margin: auto;
     }
     section.active {
       display: block;
     }
     input, button {
-      padding: 0.5rem;
-      margin: 0.5rem 0;
+      padding: 0.6rem;
+      margin: 0.6rem 0;
       width: 100%;
-    }
-
-    /* Task Card Styles */
-    .task-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
+      border-radius: 6px;
+      border: none;
     }
     .task-card {
       background-color: #222;
-      border-radius: 10px;
+      border: 1px solid #333;
+      border-radius: 12px;
       padding: 1rem;
-      text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
+      margin: 1rem 0;
+      transition: 0.3s;
     }
     .task-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 10px #a00;
+      transform: scale(1.03);
+      background-color: #333;
     }
-    .task-card h3 {
-      margin: 0.5rem 0;
+    .task-title {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .task-points {
+      color: gold;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .task-card a {
       color: #0af;
+      text-decoration: underline;
     }
-    .task-card p {
-      color: #ccc;
+    .score-box {
+      background: #222;
+      border: 1px solid #444;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .score-box span {
+      color: gold;
+      font-size: 1.5rem;
+    }
+    .game-text {
+      background: #222;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-style: italic;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
     }
   </style>
 </head>
 <body>
+
   <header>TTToken Airdrop</header>
-
-  <div class="scoreboard">
-    Your Stars: <span id="starCount" class="stars">0</span>
-  </div>
-
   <div class="logo-box">
-    <img src="https://img.icons8.com/external-flat-juicy-fish/120/ffffff/external-tractor-agriculture-flat-flat-juicy-fish.png" alt="Funny Tractor Logo">
+    <svg fill="white" viewBox="0 0 24 24"><path d="M21.5 14.6c-.2-.5-.6-.9-1.1-1.2l-2.5-1.4c.1-.4.1-.9.1-1.3 0-1.8-.7-3.4-2-4.6-.7-.7-1.6-1.2-2.5-1.5C13.3 2.4 11.7 1 9.8 1 8.2 1 6.9 2.3 6.9 4c0 .2 0 .4.1.6-.8.3-1.5.8-2.1 1.4-1.3 1.3-2 2.9-2 4.7 0 .8.1 1.5.3 2.2-.7.5-1.1 1.4-1.1 2.3 0 1.6 1.3 3 3 3s3-1.3 3-3c0-.5-.1-.9-.3-1.3.3-.1.7-.2 1-.2h6.8c.4 0 .7.1 1 .2-.2.4-.3.8-.3 1.3 0 1.6 1.3 3 3 3s3-1.3 3-3c0-.4-.1-.8-.2-1.1z"/></svg>
     <div class="year">1970</div>
   </div>
 
   <nav>
-    <button onclick="showTab('email')" class="active">Step 1: Email</button>
-    <button onclick="showTab('tasks')">Step 2: Tasks</button>
-    <button onclick="showTab('wallet')">Step 3: Wallet</button>
-    <button onclick="showTab('referral')">Step 4: Referral</button>
+    <button onclick="showTab('email')" class="active">Email</button>
+    <button onclick="showTab('tasks')">Tasks</button>
+    <button onclick="showTab('wallet')">Wallet</button>
+    <button onclick="showTab('referral')">Referral</button>
+    <button onclick="showTab('dashboard')">Dashboard</button>
+    <button onclick="showTab('game')">Game</button>
   </nav>
 
   <section id="email" class="active">
@@ -126,27 +142,29 @@
 
   <section id="tasks">
     <h2>Complete Social Tasks</h2>
-    <div class="task-grid">
-      <div class="task-card" onclick="completeTask(this, 5)">
-        <h3>Join Telegram</h3>
-        <p><a href="https://t.me/tt_memecoin" target="_blank">Click to join</a></p>
-        <p>Reward: ★★★★★</p>
-      </div>
-      <div class="task-card" onclick="completeTask(this, 5)">
-        <h3>Follow Instagram</h3>
-        <p><a href="https://www.instagram.com/tttoken1970" target="_blank">Click to follow</a></p>
-        <p>Reward: ★★★★★</p>
-      </div>
-      <div class="task-card" onclick="completeTask(this, 5)">
-        <h3>Follow on X</h3>
-        <p><a href="https://x.com/tractormemecoin" target="_blank">Click to follow</a></p>
-        <p>Reward: ★★★★★</p>
-      </div>
+
+    <div class="task-card">
+      <div class="task-title">Join our Telegram</div>
+      <div class="task-points">5 Stars</div>
+      <a href="https://t.me/tt_memecoin" target="_blank" onclick="addPoints(5)">Join Now</a>
     </div>
+
+    <div class="task-card">
+      <div class="task-title">Follow on Instagram</div>
+      <div class="task-points">5 Stars</div>
+      <a href="https://www.instagram.com/tttoken1970" target="_blank" onclick="addPoints(5)">Follow Now</a>
+    </div>
+
+    <div class="task-card">
+      <div class="task-title">Follow on X</div>
+      <div class="task-points">5 Stars</div>
+      <a href="https://x.com/tractormemecoin" target="_blank" onclick="addPoints(5)">Follow Now</a>
+    </div>
+
   </section>
 
   <section id="wallet">
-    <h2>Submit Your Ton Wallet</h2>
+    <h2>Submit Your TON Wallet</h2>
     <input type="text" id="walletInput" placeholder="TON wallet address" />
     <button onclick="saveWallet()">Save Wallet</button>
   </section>
@@ -154,39 +172,49 @@
   <section id="referral">
     <h2>Your Referral Link</h2>
     <p id="referralLink">Complete previous steps to generate your referral link.</p>
-    <p>Each valid referral gives you ★★</p>
+    <button onclick="addReferral()">Simulate Referral (+2 Stars)</button>
+  </section>
+
+  <section id="dashboard">
+    <h2>Your Dashboard</h2>
+    <div class="score-box">
+      Total Score: <span id="scoreDisplay">0</span> Stars
+    </div>
+  </section>
+
+  <section id="game">
+    <h2>Game Zone</h2>
+    <div class="game-text">تراکتور در حال آماده‌سازی برای شخم زدن بلاکچین...</div>
   </section>
 
   <script>
-    let starCount = 0;
-
-    const emailSection = document.getElementById('email');
-    const tasksSection = document.getElementById('tasks');
-    const walletSection = document.getElementById('wallet');
-    const referralSection = document.getElementById('referral');
-
-    const tabs = [emailSection, tasksSection, walletSection, referralSection];
+    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'game'];
 
     function showTab(id) {
-      const email = localStorage.getItem('tt_email');
-      if (!email && id !== 'email') {
-        alert('Please register with your email first.');
-        return;
-      }
-      tabs.forEach(tab => tab.classList.remove('active'));
+      tabs.forEach(tab => {
+        document.getElementById(tab).classList.remove('active');
+      });
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
     }
 
+    let score = 0;
+
+    function addPoints(points) {
+      score += points;
+      document.getElementById('scoreDisplay').innerText = score;
+    }
+
+    function addReferral() {
+      addPoints(2);
+    }
+
     function saveEmail() {
       const email = document.getElementById('emailInput').value;
-      if (!email || !email.includes('@')) {
-        alert('Please enter a valid email.');
-        return;
-      }
+      if (!email) return alert("Please enter an email");
       localStorage.setItem('tt_email', email);
-      alert('Email saved!');
+      alert("Email saved!");
     }
 
     function saveWallet() {
@@ -198,16 +226,7 @@
       document.getElementById('referralLink').innerText = refLink;
       alert('Wallet saved!');
     }
-
-    function completeTask(element, reward) {
-      if (element.classList.contains('done')) {
-        alert('You already completed this task.');
-        return;
-      }
-      element.classList.add('done');
-      starCount += reward;
-      document.getElementById('starCount').innerText = starCount;
-    }
   </script>
+
 </body>
 </html>

@@ -12,56 +12,162 @@
       background-color: #f0f8ff;
       text-align: center;
     }
+    .step {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
     input, button {
       padding: 0.6rem;
       margin: 0.5rem;
       font-size: 1rem;
     }
-    .success {
-      color: green;
+    .task-btn {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
     }
-    .error {
-      color: red;
+    .done {
+      background-color: #4CAF50;
+      color: white;
+    }
+    #message {
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
   <h1>Welcome to TTToken Airdrop!</h1>
-  <p>Register your wallet to join our airdrop and earn rewards by sharing!</p>
 
-  <form id="registerForm">
-    <input type="text" id="wallet" placeholder="Enter your wallet address" required />
-    <input type="text" id="referral" placeholder="Referral code (optional)" />
-    <button type="submit">Register</button>
-  </form>
+  <!-- Step 1: Enter Email -->
+  <div id="step1" class="step active">
+    <h2>Step 1: Enter your Email</h2>
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <br>
+    <button onclick="goToStep(2)">Next</button>
+  </div>
+
+  <!-- Step 2: Social Tasks -->
+  <div id="step2" class="step">
+    <h2>Step 2: Complete Social Tasks</h2>
+    <p>Click on each button after you complete the task:</p>
+    <div>
+      <button id="btnTelegram" class="task-btn" onclick="markTask('telegram')">Follow Telegram</button>
+    </div>
+    <div>
+      <button id="btnInstagram" class="task-btn" onclick="markTask('instagram')">Follow Instagram</button>
+    </div>
+    <div>
+      <button id="btnTwitter" class="task-btn" onclick="markTask('twitter')">Follow X (Twitter)</button>
+    </div>
+    <br>
+    <button onclick="checkTasks()">Next</button>
+  </div>
+
+  <!-- Step 3: Enter Wallet Address -->
+  <div id="step3" class="step">
+    <h2>Step 3: Enter your TON Wallet Address</h2>
+    <input type="text" id="wallet" placeholder="Enter your TON wallet address" required />
+    <br>
+    <button onclick="goToStep(4)">Submit</button>
+  </div>
+
+  <!-- Step 4: Display Referral Link -->
+  <div id="step4" class="step">
+    <h2>Registration Complete!</h2>
+    <p>Your referral link:</p>
+    <p id="referralLink" style="font-weight: bold;"></p>
+  </div>
 
   <div id="message"></div>
 
   <script>
+    // Initialize Supabase client
     const supabase = supabase.createClient(
       'https://qwsgmmtmoynoazmhdlth.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk'
     );
 
-    const form = document.getElementById('registerForm');
-    const messageDiv = document.getElementById('message');
+    // Step navigation
+    function goToStep(stepNumber) {
+      // Hide all steps
+      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+      // Show the selected step
+      document.getElementById('step' + stepNumber).classList.add('active');
+    }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const wallet = document.getElementById('wallet').value.trim();
-      const referral = document.getElementById('referral').value.trim();
+    // Task status
+    const tasks = {
+      telegram: false,
+      instagram: false,
+      twitter: false
+    };
 
-      const { data, error } = await supabase
-        .from('wallets')
-        .insert([{ wallet, referral }]);
-
-      if (error) {
-        messageDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
-      } else {
-        messageDiv.innerHTML = `<p class="success">Wallet registered successfully!</p>`;
-        form.reset();
+    function markTask(taskName) {
+      tasks[taskName] = true;
+      const btn = document.getElementById('btn' + capitalize(taskName));
+      if (btn) {
+        btn.classList.add('done');
+        btn.disabled = true;
+        btn.innerText += " ✓";
       }
-    });
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Check if all tasks are completed before moving to next step
+    function checkTasks() {
+      if (tasks.telegram && tasks.instagram && tasks.twitter) {
+        goToStep(3);
+      } else {
+        alert("Please complete all social tasks before proceeding.");
+      }
+    }
+
+    // Final submission: Register user data in Supabase
+    function submitData() {
+      const email = document.getElementById('email').value.trim();
+      const wallet = document.getElementById('wallet').value.trim();
+      // (Optional) Validate wallet: should start with 'EQ' or 'UQ'
+      if (!wallet.startsWith("EQ") && !wallet.startsWith("UQ")) {
+        alert("Invalid TON wallet address.");
+        return;
+      }
+      
+      // Generate a random referral code (6 characters)
+      const referralCode = Math.random().toString(36).substring(2, 8);
+
+      // Check for referral in URL parameter (if exists)
+      const urlParams = new URLSearchParams(window.location.search);
+      const referredBy = urlParams.get('ref');
+
+      // Insert the data into Supabase table "wallets"
+      supabase.from('wallets').insert([
+        {
+          email: email,
+          telegram_done: tasks.telegram,
+          instagram_done: tasks.instagram,
+          twitter_done: tasks.twitter,
+          wallet: wallet,
+          referral_code: referralCode,
+          referred_by: referredBy || null
+        }
+      ]).then(({ data, error }) => {
+        if (error) {
+          document.getElementById('message').innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+        } else {
+          // Display referral link to user (using their wallet address as unique id)
+          const referralLink = window.location.origin + window.location.pathname + "?ref=" + wallet;
+          document.getElementById('referralLink').innerText = referralLink;
+          goToStep(4);
+        }
+      });
+    }
+
+    // When in Step 3, clicking "Submit" should trigger data submission
+    document.getElementById('step3').querySelector('button').addEventListener('click', submitData);
   </script>
 </body>
 </html>

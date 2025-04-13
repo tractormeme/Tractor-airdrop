@@ -85,7 +85,7 @@
     }
   </style>
 </head>
-<body>  
+<body>
   <header>TTToken Airdrop</header>
   <div class="logo-box">
     <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo"/>
@@ -109,15 +109,15 @@
   <section id="tasks">
     <h2>Complete Social Tasks</h2>
     <div class="task-box">
-      <a href="https://t.me/tt_memecoin" target="_blank" class="task-link" data-points="5">Join our Telegram</a>
+      <a href="https://t.me/tt_memecoin" target="_blank" class="task-link" onclick="awardStars(5)">Join our Telegram</a>
       <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <a href="https://www.instagram.com/tttoken1970" target="_blank" class="task-link" data-points="5">Follow us on Instagram</a>
+      <a href="https://www.instagram.com/tttoken1970" target="_blank" class="task-link" onclick="awardStars(5)">Follow us on Instagram</a>
       <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <a href="https://x.com/tractormemecoin" target="_blank" class="task-link" data-points="5">Follow us on X</a>
+      <a href="https://x.com/tractormemecoin" target="_blank" class="task-link" onclick="awardStars(5)">Follow us on X</a>
       <div class="stars">5 ★</div>
     </div>
   </section>  
@@ -152,7 +152,7 @@
   <script>
     const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'game'];
     let totalStars = 0;
@@ -171,7 +171,7 @@
 
       const refCode = email.split('@')[0];
 
-      const { data, error } = await supabase.from('users').upsert([
+      const { error } = await client.from('users').upsert([
         { email, ref_code: refCode }
       ], { onConflict: ['email'] });
 
@@ -185,7 +185,7 @@
       const email = localStorage.getItem('tt_email');
       if (!email) return alert('Please save your email first.');
 
-      const { data, error } = await supabase.from('users').update({
+      const { error } = await client.from('users').update({
         wallet: wallet
       }).eq('email', email);
 
@@ -203,24 +203,40 @@
 
       const email = localStorage.getItem('tt_email');
       if (email) {
-        await supabase.from('users').update({
+        await client.from('users').update({
           points: totalStars
         }).eq('email', email);
       }
+    }
+
+    async function simulateReferral() {
+      const email = localStorage.getItem('tt_email');
+      if (!email) return;
+
+      totalStars += 10;
+      document.getElementById('totalStars').innerText = totalStars;
+
+      await client.from('users').update({
+        referrals: 1,
+        points: totalStars
+      }).eq('email', email);
     }
 
     async function loadDashboard() {
       const email = localStorage.getItem('tt_email');
       if (!email) return;
 
-      const { data, error } = await supabase
+      const { data, error } = await client
         .from('users')
         .select('points, referrals')
         .eq('email', email)
         .single();
 
       if (data) {
-        totalStars = data.points;
+        totalStars = data.points || 0;
         document.getElementById('totalStars').innerText = totalStars;
       }
     }
+  </script>
+</body>
+</html>

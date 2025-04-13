@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TTToken Airdrop</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <style>
     body {
       margin: 0;
@@ -104,6 +105,7 @@
   <section id="email" class="active">
     <h2>Register Email</h2>
     <input type="email" id="emailInput" placeholder="Enter your email"/>
+    <div class="g-recaptcha" data-sitekey="6LclJBcrAAAAAIeKZAFvfHnN-zg8j1TtCTPdUH-V"></div>
     <button onclick="saveEmail()">Save Email</button>
   </section>
 
@@ -164,6 +166,11 @@
 
     function saveEmail() {
       const email = document.getElementById('emailInput').value;
+      const captchaResponse = grecaptcha.getResponse();
+      if (!captchaResponse) {
+        alert("Please complete the reCAPTCHA.");
+        return;
+      }
       if (!email.includes('@')) return alert('Invalid email!');
       localStorage.setItem('tt_email', email);
       alert('Email saved!');

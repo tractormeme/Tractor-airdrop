@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TTToken Airdrop</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f0f8ff;
+      text-align: center;
+    }
+    input, button {
+      padding: 0.6rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to TTToken Airdrop!</h1>
+  <p>Register your wallet to join our airdrop and earn rewards by sharing!</p>
+
+  <form id="registerForm">
+    <input type="text" id="wallet" placeholder="Enter your wallet address" required />
+    <input type="text" id="referral" placeholder="Referral code (optional)" />
+    <button type="submit">Register</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://qwsgmmtmoynoazmhdlth.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk'
+    );
+
+    const form = document.getElementById('registerForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const wallet = document.getElementById('wallet').value.trim();
+      const referral = document.getElementById('referral').value.trim();
+
+      const { data, error } = await supabase
+        .from('wallets')
+        .insert([{ wallet, referral }]);
+
+      if (error) {
+        messageDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+      } else {
+        messageDiv.innerHTML = `<p class="success">Wallet registered successfully!</p>`;
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>

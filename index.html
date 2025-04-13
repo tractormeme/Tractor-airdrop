@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TTToken Airdrop</title>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
       margin: 0;
@@ -85,14 +85,12 @@
     }
   </style>
 </head>
-<body>
-
+<body>  
   <header>TTToken Airdrop</header>
   <div class="logo-box">
     <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo"/>
     <div class="year">1970</div>
-  </div>
-
+  </div>  
   <nav>
     <button onclick="showTab('email')" class="active">Email</button>
     <button onclick="showTab('tasks')">Tasks</button>
@@ -100,18 +98,16 @@
     <button onclick="showTab('referral')">Referral</button>
     <button onclick="showTab('dashboard')">Dashboard</button>
     <button onclick="showTab('game')">Game</button>
-  </nav>
+  </nav>  
 
   <section id="email" class="active">
     <h2>Register Email</h2>
     <input type="email" id="emailInput" placeholder="Enter your email"/>
-    <div class="g-recaptcha" data-sitekey="6LclJBcrAAAAAIeKZAFvfHnN-zg8j1TtCTPdUH-V"></div>
     <button onclick="saveEmail()">Save Email</button>
-  </section>
+  </section>  
 
   <section id="tasks">
     <h2>Complete Social Tasks</h2>
-
     <div class="task-box">
       <a href="https://t.me/tt_memecoin" target="_blank" class="task-link" data-points="5">Join our Telegram</a>
       <div class="stars">5 ★</div>
@@ -124,19 +120,19 @@
       <a href="https://x.com/tractormemecoin" target="_blank" class="task-link" data-points="5">Follow us on X</a>
       <div class="stars">5 ★</div>
     </div>
-  </section>
+  </section>  
 
   <section id="wallet">
     <h2>Submit Your TON Wallet</h2>
     <input type="text" id="walletInput" placeholder="TON wallet address"/>
     <button onclick="saveWallet()">Save Wallet</button>
-  </section>
+  </section>  
 
   <section id="referral">
     <h2>Your Referral Link</h2>
     <p id="referralLink">Complete previous steps to generate your referral link.</p>
     <button onclick="simulateReferral()">Simulate 1 Referral</button>
-  </section>
+  </section>  
 
   <section id="dashboard">
     <h2>Your Dashboard</h2>
@@ -144,16 +140,20 @@
       Total Stars: <span id="totalStars">0</span> ★
     </div>
     <p style="text-align: center; margin-top: 10px; color: #888;">Complete more tasks or invite friends to earn more stars!</p>
-  </section>
+  </section>  
 
   <section id="game">
     <h2>Game Time!</h2>
     <p style="text-align:center; font-size: 1.2rem; margin-top: 30px;">
       تراکتور در حال آماده‌سازی برای شخم زدن بلاکچین است...
     </p>
-  </section>
+  </section>  
 
   <script>
+    const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'game'];
     let totalStars = 0;
 
@@ -162,47 +162,65 @@
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
+      if (id === 'dashboard') loadDashboard();
     }
 
-    function saveEmail() {
+    async function saveEmail() {
       const email = document.getElementById('emailInput').value;
-      const captchaResponse = grecaptcha.getResponse();
-      if (!captchaResponse) {
-        alert("Please complete the reCAPTCHA.");
-        return;
-      }
       if (!email.includes('@')) return alert('Invalid email!');
+
+      const refCode = email.split('@')[0];
+
+      const { data, error } = await supabase.from('users').upsert([
+        { email, ref_code: refCode }
+      ], { onConflict: ['email'] });
+
+      if (error) return alert('Error saving email');
       localStorage.setItem('tt_email', email);
       alert('Email saved!');
     }
 
-    function saveWallet() {
+    async function saveWallet() {
       const wallet = document.getElementById('walletInput').value;
       const email = localStorage.getItem('tt_email');
       if (!email) return alert('Please save your email first.');
+
+      const { data, error } = await supabase.from('users').update({
+        wallet: wallet
+      }).eq('email', email);
+
+      if (error) return alert('Error saving wallet');
+
       const refCode = email.split('@')[0];
       const refLink = `${window.location.origin}?ref=${refCode}`;
       document.getElementById('referralLink').innerText = refLink;
       alert('Wallet saved!');
     }
 
-    function awardStars(amount) {
+    async function awardStars(amount) {
       totalStars += amount;
       document.getElementById('totalStars').innerText = totalStars;
+
+      const email = localStorage.getItem('tt_email');
+      if (email) {
+        await supabase.from('users').update({
+          points: totalStars
+        }).eq('email', email);
+      }
     }
 
-    document.querySelectorAll('.task-link').forEach(link => {
-      link.addEventListener('click', () => {
-        if (!link.dataset.clicked) {
-          link.dataset.clicked = true;
-          awardStars(parseInt(link.dataset.points));
-        }
-      });
-    });
+    async function loadDashboard() {
+      const email = localStorage.getItem('tt_email');
+      if (!email) return;
 
-    function simulateReferral() {
-      awardStars(2); // هر ریفرال فعال = 2 ستاره
+      const { data, error } = await supabase
+        .from('users')
+        .select('points, referrals')
+        .eq('email', email)
+        .single();
+
+      if (data) {
+        totalStars = data.points;
+        document.getElementById('totalStars').innerText = totalStars;
+      }
     }
-  </script>
-</body>
-</html>

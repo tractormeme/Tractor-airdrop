@@ -1,90 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TTToken Airdrop</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
+      margin: 0;
       font-family: 'Arial', sans-serif;
-      background: #0d0d0d;
-      color: white;
+      background-color: #111;
+      color: #fff;
+    }
+    header {
+      background-color: #a00;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    nav {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
+      justify-content: center;
+      background-color: #222;
     }
-    h1 {
-      color: #ff0000;
-    }
-    form {
-      background: #1a1a1a;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px #ff0000;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 300px;
-    }
-    input, button {
-      padding: 10px;
+    nav button {
+      flex: 1;
+      padding: 1rem;
       border: none;
-      border-radius: 10px;
-      font-size: 1em;
-    }
-    input {
-      background: #333;
-      color: white;
-    }
-    button {
-      background: #ff0000;
+      background: #222;
       color: white;
       cursor: pointer;
     }
-    .success {
-      color: #00ff88;
-      margin-top: 15px;
+    nav button.active, nav button:hover {
+      background-color: #a00;
+    }
+    section {
+      display: none;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+    }
+    section.active {
+      display: block;
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      width: 100%;
+    }
+    .task-link {
+      display: block;
+      margin: 0.5rem 0;
+      color: #0af;
     }
   </style>
 </head>
 <body>
-  <h1>TTToken Airdrop</h1>
-  <form id="airdropForm">
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="text" id="wallet" placeholder="TON Wallet Address" required />
-    <input type="text" id="referral" placeholder="Referral Code (Optional)" />
-    <button type="submit">Join Airdrop</button>
-    <div id="status" class="success"></div>
-  </form>
+  <header>TTToken Airdrop</header>
+  <nav>
+    <button onclick="showTab('email')" class="active">Step 1: Email</button>
+    <button onclick="showTab('tasks')">Step 2: Tasks</button>
+    <button onclick="showTab('wallet')">Step 3: Wallet</button>
+    <button onclick="showTab('referral')">Step 4: Referral</button>
+  </nav>  <section id="email" class="active">
+    <h2>Register Email</h2>
+    <input type="email" id="emailInput" placeholder="Enter your email" />
+    <button onclick="saveEmail()">Save Email</button>
+  </section>  <section id="tasks">
+    <h2>Complete Social Tasks</h2>
+    <a href="https://t.me/tt_memecoin" class="task-link" target="_blank">Join our Telegram</a>
+    <a href="https://www.instagram.com/tttoken1970?igsh=MXJqb3d6OWttazllcw==" class="task-link" target="_blank">Follow on Instagram</a>
+    <a href="https://x.com/tractormemecoin?t=FJvyRy8UaPhLDsdNlsl0qw&s=09" class="task-link" target="_blank">Follow on X</a>
+  </section>  <section id="wallet">
+    <h2>Submit Your Ton Wallet</h2>
+    <input type="text" id="walletInput" placeholder="TON wallet address" />
+    <button onclick="saveWallet()">Save Wallet</button>
+  </section>  <section id="referral">
+    <h2>Your Referral Link</h2>
+    <p id="referralLink">Complete previous steps to generate your referral link.</p>
+  </section>  <script>
+    const emailSection = document.getElementById('email');
+    const tasksSection = document.getElementById('tasks');
+    const walletSection = document.getElementById('wallet');
+    const referralSection = document.getElementById('referral');
 
-  <script>
-    const supabaseUrl = 'https://qwsgmmtmoynoazmhdlth.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const tabs = [emailSection, tasksSection, walletSection, referralSection];
 
-    const form = document.getElementById('airdropForm');
-    const status = document.getElementById('status');
+    function showTab(id) {
+      tabs.forEach(tab => tab.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const wallet = document.getElementById('wallet').value;
-      const referral = document.getElementById('referral').value;
+    function saveEmail() {
+      const email = document.getElementById('emailInput').value;
+      localStorage.setItem('tt_email', email);
+      alert('Email saved!');
+    }
 
-      const { data, error } = await supabase
-        .from('users')
-        .insert([{ email, wallet, referred_by: referral }]);
-
-      if (error) {
-        status.textContent = 'Error: ' + error.message;
-        status.style.color = 'red';
-      } else {
-        status.textContent = 'Success! You’ve joined the airdrop.';
-        form.reset();
-      }
-    });
-  </script>
-</body>
+    function saveWallet() {
+      const wallet = document.getElementById('walletInput').value;
+      const email = localStorage.getItem('tt_email');
+      if (!email) return alert('Please save your email first.');
+      const refCode = email.split('@')[0];
+      const refLink = `${window.location.origin}?ref=${refCode}`;
+      document.getElementById('referralLink').innerText = refLink;
+      alert('Wallet saved!');
+    }
+  </script></body>
 </html>

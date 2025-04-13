@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,6 +17,19 @@
       text-align: center;
       font-size: 1.5rem;
       font-weight: bold;
+    }
+    .logo-box {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .logo-box img {
+      width: 100px;
+      height: auto;
+    }
+    .logo-box .year {
+      margin-top: 5px;
+      font-size: 18px;
+      color: #aaa;
     }
     nav {
       display: flex;
@@ -52,32 +66,71 @@
       margin: 0.5rem 0;
       color: #0af;
     }
+
+    #points button {
+      width: auto;
+      margin: 5px;
+      background-color: #333;
+      border: 1px solid #555;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #points h2 {
+      font-size: 1.3rem;
+    }
   </style>
 </head>
 <body>
   <header>TTToken Airdrop</header>
+
+  <div class="logo-box">
+    <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo">
+    <div class="year">1970</div>
+  </div>
+
   <nav>
     <button onclick="showTab('email')" class="active">Step 1: Email</button>
     <button onclick="showTab('tasks')">Step 2: Tasks</button>
     <button onclick="showTab('wallet')">Step 3: Wallet</button>
     <button onclick="showTab('referral')">Step 4: Referral</button>
-  </nav>  <section id="email" class="active">
+  </nav>
+
+  <section id="email" class="active">
     <h2>Register Email</h2>
     <input type="email" id="emailInput" placeholder="Enter your email" />
     <button onclick="saveEmail()">Save Email</button>
-  </section>  <section id="tasks">
+  </section>
+
+  <section id="tasks">
     <h2>Complete Social Tasks</h2>
     <a href="https://t.me/tt_memecoin" class="task-link" target="_blank">Join our Telegram</a>
     <a href="https://www.instagram.com/tttoken1970?igsh=MXJqb3d6OWttazllcw==" class="task-link" target="_blank">Follow on Instagram</a>
     <a href="https://x.com/tractormemecoin?t=FJvyRy8UaPhLDsdNlsl0qw&s=09" class="task-link" target="_blank">Follow on X</a>
-  </section>  <section id="wallet">
+  </section>
+
+  <section id="wallet">
     <h2>Submit Your Ton Wallet</h2>
     <input type="text" id="walletInput" placeholder="TON wallet address" />
     <button onclick="saveWallet()">Save Wallet</button>
-  </section>  <section id="referral">
+  </section>
+
+  <section id="referral">
     <h2>Your Referral Link</h2>
     <p id="referralLink">Complete previous steps to generate your referral link.</p>
-  </section>  <script>
+  </section>
+
+  <!-- New section for star-based points -->
+  <section id="points" style="text-align: center; margin-top: 2rem;">
+    <h2>Your Stars: <span id="starCount">0</span> ★</h2>
+    <button onclick="completeTask('telegram')">Join Telegram</button>
+    <button onclick="completeTask('instagram')">Follow Instagram</button>
+    <button onclick="completeTask('x')">Follow X</button>
+    <br><br>
+    <button onclick="addReferral()">+1 Referral</button>
+  </section>
+
+  <script>
     const emailSection = document.getElementById('email');
     const tasksSection = document.getElementById('tasks');
     const walletSection = document.getElementById('wallet');
@@ -107,5 +160,29 @@
       document.getElementById('referralLink').innerText = refLink;
       alert('Wallet saved!');
     }
-  </script></body>
+
+    // Stars system
+    let stars = 0;
+    const taskDone = {};
+
+    function updateStars() {
+      document.getElementById('starCount').innerText = stars;
+    }
+
+    function completeTask(task) {
+      if (taskDone[task]) {
+        alert("You already completed this task!");
+        return;
+      }
+      stars += 5;
+      taskDone[task] = true;
+      updateStars();
+    }
+
+    function addReferral() {
+      stars += 2;
+      updateStars();
+    }
+  </script>
+</body>
 </html>

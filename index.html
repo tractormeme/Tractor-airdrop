@@ -4,170 +4,135 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TTToken Airdrop</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 2rem;
-      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #1a1a1a;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+    }
+
+    h1, h2 {
       text-align: center;
+      color: #ff3333;
     }
-    .step {
-      display: none;
-    }
-    .active {
-      display: block;
-    }
-    input, button {
-      padding: 0.6rem;
-      margin: 0.5rem;
-      font-size: 1rem;
-    }
+
     .task-btn {
-      margin: 0.5rem;
-      padding: 0.5rem 1rem;
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      background-color: #ff3333;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-align: center;
+      text-decoration: none;
     }
-    .done {
-      background-color: #4CAF50;
-      color: white;
+
+    .task-btn:hover {
+      background-color: #cc0000;
     }
+
+    .task-btn.completed {
+      background-color: #009900;
+    }
+
+    input[type="email"], input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ff3333;
+      border-radius: 5px;
+      background-color: #000;
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
     #message {
-      margin-top: 1rem;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      word-break: break-word;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to TTToken Airdrop!</h1>
+  <div class="container">
+    <h1>Join TTToken Airdrop</h1>
 
-  <!-- Step 1: Enter Email -->
-  <div id="step1" class="step active">
-    <h2>Step 1: Enter your Email</h2>
-    <input type="email" id="email" placeholder="Enter your email" required />
-    <br>
-    <button onclick="goToStep(2)">Next</button>
-  </div>
-
-  <!-- Step 2: Social Tasks -->
-  <div id="step2" class="step">
-    <h2>Step 2: Complete Social Tasks</h2>
-    <p>Click on each button after you complete the task:</p>
-    <div>
-      <button id="btnTelegram" class="task-btn" onclick="markTask('telegram')">Follow Telegram</button>
+    <div id="step1">
+      <h2>Step 1: Enter Your Email</h2>
+      <input type="email" id="emailInput" placeholder="Enter your email" />
+      <button class="task-btn" onclick="goToStep2()">Next</button>
     </div>
-    <div>
-      <button id="btnInstagram" class="task-btn" onclick="markTask('instagram')">Follow Instagram</button>
+
+    <div id="step2" style="display:none;">
+      <h2>Step 2: Follow Us</h2>
+      <a href="https://t.me/tt_memecoin" target="_blank" id="btnTelegram" class="task-btn" onclick="markTask('telegram')">Follow on Telegram</a>
+      <a href="https://www.instagram.com/tttoken1970?igsh=MXJqb3d6OWttazllcw==" target="_blank" id="btnInstagram" class="task-btn" onclick="markTask('instagram')">Follow on Instagram</a>
+      <a href="https://x.com/tractormemecoin?t=FJvyRy8UaPhLDsdNlsl0qw&s=09" target="_blank" id="btnTwitter" class="task-btn" onclick="markTask('twitter')">Follow on X (Twitter)</a>
+      <button class="task-btn" onclick="checkTasks()">Next</button>
     </div>
-    <div>
-      <button id="btnTwitter" class="task-btn" onclick="markTask('twitter')">Follow X (Twitter)</button>
+
+    <div id="step3" style="display:none;">
+      <h2>Step 3: Submit Wallet</h2>
+      <input type="text" id="walletInput" placeholder="Enter your TON Wallet" />
+      <button class="task-btn" onclick="generateReferral()">Get Referral Link</button>
     </div>
-    <br>
-    <button onclick="checkTasks()">Next</button>
-  </div>
 
-  <!-- Step 3: Enter Wallet Address -->
-  <div id="step3" class="step">
-    <h2>Step 3: Enter your TON Wallet Address</h2>
-    <input type="text" id="wallet" placeholder="Enter your TON wallet address" required />
-    <br>
-    <button onclick="goToStep(4)">Submit</button>
+    <div id="message"></div>
   </div>
-
-  <!-- Step 4: Display Referral Link -->
-  <div id="step4" class="step">
-    <h2>Registration Complete!</h2>
-    <p>Your referral link:</p>
-    <p id="referralLink" style="font-weight: bold;"></p>
-  </div>
-
-  <div id="message"></div>
 
   <script>
-    // Initialize Supabase client
-    const supabase = supabase.createClient(
-      'https://qwsgmmtmoynoazmhdlth.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk'
-    );
+    const tasks = { telegram: false, instagram: false, twitter: false };
 
-    // Step navigation
-    function goToStep(stepNumber) {
-      // Hide all steps
-      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-      // Show the selected step
-      document.getElementById('step' + stepNumber).classList.add('active');
+    function goToStep2() {
+      const email = document.getElementById('emailInput').value;
+      if (!email) return alert("Please enter your email.");
+      document.getElementById('step1').style.display = "none";
+      document.getElementById('step2').style.display = "block";
     }
 
-    // Task status
-    const tasks = {
-      telegram: false,
-      instagram: false,
-      twitter: false
-    };
-
-    function markTask(taskName) {
-      tasks[taskName] = true;
-      const btn = document.getElementById('btn' + capitalize(taskName));
-      if (btn) {
-        btn.classList.add('done');
-        btn.disabled = true;
-        btn.innerText += " ✓";
-      }
+    function markTask(task) {
+      tasks[task] = true;
+      const btn = document.getElementById('btn' + capitalize(task));
+      btn.classList.add('completed');
+      btn.innerText += " ✓";
     }
 
-    function capitalize(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    // Check if all tasks are completed before moving to next step
     function checkTasks() {
       if (tasks.telegram && tasks.instagram && tasks.twitter) {
-        goToStep(3);
+        document.getElementById('step2').style.display = "none";
+        document.getElementById('step3').style.display = "block";
       } else {
-        alert("Please complete all social tasks before proceeding.");
+        alert("Complete all tasks first.");
       }
     }
 
-    // Final submission: Register user data in Supabase
-    function submitData() {
-      const email = document.getElementById('email').value.trim();
-      const wallet = document.getElementById('wallet').value.trim();
-      // (Optional) Validate wallet: should start with 'EQ' or 'UQ'
-      if (!wallet.startsWith("EQ") && !wallet.startsWith("UQ")) {
-        alert("Invalid TON wallet address.");
-        return;
-      }
-      
-      // Generate a random referral code (6 characters)
-      const referralCode = Math.random().toString(36).substring(2, 8);
-
-      // Check for referral in URL parameter (if exists)
-      const urlParams = new URLSearchParams(window.location.search);
-      const referredBy = urlParams.get('ref');
-
-      // Insert the data into Supabase table "wallets"
-      supabase.from('wallets').insert([
-        {
-          email: email,
-          telegram_done: tasks.telegram,
-          instagram_done: tasks.instagram,
-          twitter_done: tasks.twitter,
-          wallet: wallet,
-          referral_code: referralCode,
-          referred_by: referredBy || null
-        }
-      ]).then(({ data, error }) => {
-        if (error) {
-          document.getElementById('message').innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
-        } else {
-          // Display referral link to user (using their wallet address as unique id)
-          const referralLink = window.location.origin + window.location.pathname + "?ref=" + wallet;
-          document.getElementById('referralLink').innerText = referralLink;
-          goToStep(4);
-        }
-      });
+    function generateReferral() {
+      const wallet = document.getElementById('walletInput').value;
+      if (!wallet) return alert("Enter your TON wallet.");
+      const email = document.getElementById('emailInput').value;
+      const refLink = `https://tractormeme.github.io/Tractor-airdrop/?ref=${encodeURIComponent(email)}`;
+      document.getElementById('message').innerText = "Your Referral Link:\n" + refLink;
     }
 
-    // When in Step 3, clicking "Submit" should trigger data submission
-    document.getElementById('step3').querySelector('button').addEventListener('click', submitData);
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
   </script>
 </body>
 </html>

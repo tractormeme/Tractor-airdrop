@@ -1,9 +1,9 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TTToken Airdrop</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body {
       margin: 0;
@@ -15,29 +15,29 @@
       background-color: #a00;
       padding: 1rem;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: bold;
     }
     .logo-box {
       text-align: center;
-      margin: 20px 0;
+      margin: 15px 0;
     }
     .logo-box img {
       width: 100px;
-      height: auto;
     }
-    .logo-box .year {
-      margin-top: 5px;
-      font-size: 18px;
+    .year {
       color: #aaa;
+      margin-top: 5px;
     }
     nav {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       background-color: #222;
     }
     nav button {
       flex: 1;
+      min-width: 100px;
       padding: 1rem;
       border: none;
       background: #222;
@@ -62,99 +62,111 @@
       width: 100%;
     }
     .task-box {
-      background: #1c1c1c;
-      border-radius: 10px;
+      background: #222;
       padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 10px #a00;
+      margin: 1rem 0;
+      border-radius: 8px;
+      transition: 0.3s;
     }
-    .task-box h3 {
-      margin: 0 0 0.5rem;
+    .task-box:hover {
+      background: #333;
+    }
+    .task-box a {
+      color: #0af;
+      text-decoration: none;
+      display: block;
+      font-weight: bold;
     }
     .stars {
       color: gold;
-      margin-top: 0.5rem;
-    }
-    .scoreboard {
-      text-align: center;
-      margin: 1rem 0;
       font-size: 1.2rem;
-    }
-    .game-box {
-      text-align: center;
-      padding: 2rem;
-      background: #222;
-      margin-top: 2rem;
-      border-radius: 10px;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <header>TTToken Airdrop</header>  <div class="logo-box">
-    <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo">
+
+  <header>TTToken Airdrop</header>
+  <div class="logo-box">
+    <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo"/>
     <div class="year">1970</div>
-  </div>  <nav>
-    <button onclick="showTab('email')" class="active">Step 1: Email</button>
-    <button onclick="showTab('tasks')">Step 2: Tasks</button>
-    <button onclick="showTab('wallet')">Step 3: Wallet</button>
-    <button onclick="showTab('referral')">Step 4: Referral</button>
-  </nav>  <section id="email" class="active">
+  </div>
+
+  <nav>
+    <button onclick="showTab('email')" class="active">Email</button>
+    <button onclick="showTab('tasks')">Tasks</button>
+    <button onclick="showTab('wallet')">Wallet</button>
+    <button onclick="showTab('referral')">Referral</button>
+    <button onclick="showTab('dashboard')">Dashboard</button>
+    <button onclick="showTab('game')">Game</button>
+  </nav>
+
+  <section id="email" class="active">
     <h2>Register Email</h2>
-    <input type="email" id="emailInput" placeholder="Enter your email" />
-    <button onclick="registerUser()">Sign Up</button>
-  </section>  <section id="tasks">
+    <input type="email" id="emailInput" placeholder="Enter your email"/>
+    <button onclick="saveEmail()">Save Email</button>
+  </section>
+
+  <section id="tasks">
     <h2>Complete Social Tasks</h2>
+
     <div class="task-box">
-      <h3>Join our Telegram</h3>
-      <a href="https://t.me/tt_memecoin" target="_blank">Join</a>
-      <div class="stars">5 Stars</div>
+      <a href="https://t.me/tt_memecoin" target="_blank" class="task-link" data-points="5">Join our Telegram</a>
+      <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <h3>Follow on Instagram</h3>
-      <a href="https://www.instagram.com/tttoken1970" target="_blank">Follow</a>
-      <div class="stars">5 Stars</div>
+      <a href="https://www.instagram.com/tttoken1970" target="_blank" class="task-link" data-points="5">Follow us on Instagram</a>
+      <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <h3>Follow on X</h3>
-      <a href="https://x.com/tractormemecoin" target="_blank">Follow</a>
-      <div class="stars">5 Stars</div>
+      <a href="https://x.com/tractormemecoin" target="_blank" class="task-link" data-points="5">Follow us on X</a>
+      <div class="stars">5 ★</div>
     </div>
-    <div class="scoreboard">Total Stars: <span id="score">0</span></div>
-  </section>  <section id="wallet">
-    <h2>Submit Your Ton Wallet</h2>
-    <input type="text" id="walletInput" placeholder="TON wallet address" />
+  </section>
+
+  <section id="wallet">
+    <h2>Submit Your TON Wallet</h2>
+    <input type="text" id="walletInput" placeholder="TON wallet address"/>
     <button onclick="saveWallet()">Save Wallet</button>
-  </section>  <section id="referral">
+  </section>
+
+  <section id="referral">
     <h2>Your Referral Link</h2>
     <p id="referralLink">Complete previous steps to generate your referral link.</p>
-  </section>  <section class="game-box">
-    <h2>Game Teaser</h2>
-    <p>Tractor is warming up to plow the blockchain...</p>
-  </section>  <script>
-    const supabase = window.supabase.createClient(
-      'https://qwsgmmtmoynoazmhdlth.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk'
-    );
+    <button onclick="simulateReferral()">Simulate 1 Referral</button>
+  </section>
 
-    const emailSection = document.getElementById('email');
-    const tasksSection = document.getElementById('tasks');
-    const walletSection = document.getElementById('wallet');
-    const referralSection = document.getElementById('referral');
-    const scoreDisplay = document.getElementById('score');
-    let stars = 0;
+  <section id="dashboard">
+    <h2>Your Dashboard</h2>
+    <div id="pointsBox" style="font-size: 1.5rem; color: gold; text-align: center; margin-top: 20px;">
+      Total Stars: <span id="totalStars">0</span> ★
+    </div>
+    <p style="text-align: center; margin-top: 10px; color: #888;">Complete more tasks or invite friends to earn more stars!</p>
+  </section>
+
+  <section id="game">
+    <h2>Game Time!</h2>
+    <p style="text-align:center; font-size: 1.2rem; margin-top: 30px;">
+      تراکتور در حال آماده‌سازی برای شخم زدن بلاکچین است...
+    </p>
+  </section>
+
+  <script>
+    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'game'];
+    let totalStars = 0;
 
     function showTab(id) {
-      [emailSection, tasksSection, walletSection, referralSection].forEach(tab => tab.classList.remove('active'));
+      tabs.forEach(t => document.getElementById(t).classList.remove('active'));
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
     }
 
-    async function registerUser() {
+    function saveEmail() {
       const email = document.getElementById('emailInput').value;
-      const { error } = await supabase.auth.signInWithOtp({ email });
-      if (error) return alert('Error: ' + error.message);
-      alert('Check your email to confirm login!');
+      if (!email.includes('@')) return alert('Invalid email!');
+      localStorage.setItem('tt_email', email);
+      alert('Email saved!');
     }
 
     function saveWallet() {
@@ -167,12 +179,23 @@
       alert('Wallet saved!');
     }
 
-    // Fake scoring for demo
-    document.querySelectorAll('.task-box a').forEach(link => {
+    function awardStars(amount) {
+      totalStars += amount;
+      document.getElementById('totalStars').innerText = totalStars;
+    }
+
+    document.querySelectorAll('.task-link').forEach(link => {
       link.addEventListener('click', () => {
-        stars += 5;
-        scoreDisplay.innerText = stars;
+        if (!link.dataset.clicked) {
+          link.dataset.clicked = true;
+          awardStars(parseInt(link.dataset.points));
+        }
       });
     });
-  </script></body>
+
+    function simulateReferral() {
+      awardStars(2); // هر ریفرال فعال = 2 ستاره
+    }
+  </script>
+</body>
 </html>

@@ -1,77 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TTToken Airdrop</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    body { margin: 0; font-family: 'Arial'; background-color: #111; color: #fff; }
-    header { background: #a00; padding: 1rem; text-align: center; font-size: 2rem; }
-    nav { display: flex; flex-wrap: wrap; justify-content: center; background: #222; }
-    nav button { padding: 1rem; flex: 1; border: none; background: #222; color: white; cursor: pointer; }
-    nav button.active, nav button:hover { background: #a00; }
+    body { margin: 0; font-family: 'Arial'; background-color: #0c0c0c; color: #fff; }
+    header { background: linear-gradient(90deg, #ff003c, #ff7700); padding: 1rem; text-align: center; font-size: 2rem; font-weight: bold; letter-spacing: 2px; }
+    nav { display: flex; flex-wrap: wrap; justify-content: center; background: #1a1a1a; }
+    nav button { padding: 1rem; flex: 1; border: none; background: #1a1a1a; color: white; cursor: pointer; transition: background 0.3s; }
+    nav button.active, nav button:hover { background: #ff003c; }
     section { display: none; padding: 2rem; max-width: 600px; margin: auto; }
     section.active { display: block; }
-    input, button { padding: 0.6rem; margin: 0.5rem 0; width: 100%; }
-    .task-box { background: #222; padding: 1rem; margin: 1rem 0; border-radius: 8px; }
-    .stars { color: gold; }
+    input, button { padding: 0.8rem; margin: 0.5rem 0; width: 100%; border-radius: 8px; border: none; }
+    .task-box { background: #222; padding: 1rem; margin: 1rem 0; border-radius: 12px; box-shadow: 0 0 10px #000; }
+    .stars { color: gold; margin-top: 0.5rem; font-weight: bold; }
+    a.task-link { display: block; margin-bottom: 0.5rem; color: #58a6ff; text-decoration: underline; }
+    .info { font-size: 0.9rem; color: #ccc; text-align: center; margin-top: 1rem; }
   </style>
 </head>
-<body>
-
-  <header>TTToken Airdrop</header>
+<body>  <header>TTToken Airdrop</header>
   <nav>
-    <button onclick="showTab('email')" class="active">Email</button>
+    <button onclick="showTab('email')" class="active">Register</button>
     <button onclick="showTab('tasks')">Tasks</button>
     <button onclick="showTab('wallet')">Wallet</button>
     <button onclick="showTab('referral')">Referral</button>
     <button onclick="showTab('dashboard')">Dashboard</button>
-  </nav>
-
-  <section id="email" class="active">
-    <h2>Register Email</h2>
+  </nav>  <section id="email" class="active">
+    <h2>Enter Email</h2>
     <input type="email" id="emailInput" placeholder="Enter your email"/>
-    <button onclick="saveEmail()">Save Email</button>
-  </section>
-
-  <section id="tasks">
+    <button onclick="saveEmail()">Submit</button>
+    <div class="info">We’ll use your email to track your progress.</div>
+  </section>  <section id="tasks">
     <h2>Tasks</h2>
     <div class="task-box">
-      <a href="#" onclick="completeTask('telegram_done')">Join Telegram</a>
-      <div class="stars">5 ★</div>
+      <a class="task-link" href="https://t.me/tt_memecoin" target="_blank">Join our Telegram</a>
+      <button onclick="completeTask('telegram_done')">Task Done</button>
+      <div class="stars">+5 ★</div>
     </div>
     <div class="task-box">
-      <a href="#" onclick="completeTask('instagram_done')">Follow Instagram</a>
-      <div class="stars">5 ★</div>
+      <a class="task-link" href="https://www.instagram.com/tttoken1970?igsh=MXJqb3d6OWttazllcw==" target="_blank">Follow on Instagram</a>
+      <button onclick="completeTask('instagram_done')">Task Done</button>
+      <div class="stars">+5 ★</div>
     </div>
     <div class="task-box">
-      <a href="#" onclick="completeTask('x_done')">Follow X</a>
-      <div class="stars">5 ★</div>
+      <a class="task-link" href="https://x.com/tractormemecoin?t=Ade645QmBP7GTtVocd7lwQ&s=09" target="_blank">Follow us on X</a>
+      <button onclick="completeTask('x_done')">Task Done</button>
+      <div class="stars">+5 ★</div>
     </div>
-  </section>
-
-  <section id="wallet">
+  </section>  <section id="wallet">
     <h2>Submit Wallet</h2>
     <input type="text" id="walletInput" placeholder="Enter your TON Wallet"/>
     <button onclick="saveWallet()">Save Wallet</button>
-  </section>
-
-  <section id="referral">
-    <h2>Your Referral</h2>
-    <p id="referralLink">Complete steps to get referral link</p>
-  </section>
-
-  <section id="dashboard">
+  </section>  <section id="referral">
+    <h2>Your Referral Link</h2>
+    <p id="referralLink">Register to get your link</p>
+  </section>  <section id="dashboard">
     <h2>Your Points</h2>
     <div>Total Stars: <span id="totalStars">0</span> ★</div>
-  </section>
-
-<script>
+  </section><script>
   const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk";
   const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
   const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
 
   function showTab(id) {
@@ -83,21 +73,35 @@
   }
 
   async function saveEmail() {
-    const email = document.getElementById('emailInput').value.trim();
+    const email = document.getElementById('emailInput').value.trim().toLowerCase();
     if (!email.includes('@')) return alert('Invalid email');
+
+    const ref = new URLSearchParams(window.location.search).get('ref');
     localStorage.setItem('tt_email', email);
 
-    const { error } = await client.from('users').upsert({ email }, { onConflict: ['email'] });
-    if (error) return alert('Saving email failed');
-    alert('Email saved');
+    const { data: existingUser, error } = await client.from('users').select('email').eq('email', email).single();
+    if (!existingUser) {
+      await client.from('users').insert({ email, points: 0, referral: ref || null });
+      if (ref) {
+        const refEmail = ref + '@';
+        const { data: refUser } = await client.from('users').select('points').ilike('email', `${refEmail}%`).single();
+        if (refUser) {
+          await client.from('users').update({ points: (refUser.points || 0) + 2.5 }).ilike('email', `${refEmail}%`);
+        }
+      }
+    }
+
+    alert('Email saved!');
+    const refLink = `${window.location.origin}?ref=${email.split('@')[0]}`;
+    document.getElementById('referralLink').innerText = refLink;
   }
 
   async function completeTask(task) {
     const email = localStorage.getItem('tt_email');
-    if (!email) return alert('Save your email first');
+    if (!email) return alert('Please register your email first.');
 
     const { data, error } = await client.from('users').select(`${task}, points`).eq('email', email).single();
-    if (error || !data) return alert('Error fetching user');
+    if (error || !data) return alert('Error fetching user.');
 
     if (data[task]) return alert('Task already completed');
     const newPoints = (data.points || 0) + 5;
@@ -105,20 +109,17 @@
 
     const { error: updateError } = await client.from('users').update(update).eq('email', email);
     if (updateError) return alert('Failed to update task');
-    alert('Task completed');
+    alert('Task marked as completed');
   }
 
   async function saveWallet() {
     const wallet = document.getElementById('walletInput').value.trim();
     const email = localStorage.getItem('tt_email');
-    if (!email) return alert('Save your email first');
+    if (!email || !wallet) return alert('Fill your email and wallet');
 
-    const { error } = await client.from('users').update({ wallet }).eq('email', email);
-    if (error) return alert('Saving wallet failed');
-
-    const refCode = email.split('@')[0];
-    const link = `${window.location.origin}?ref=${refCode}`;
-    document.getElementById('referralLink').innerText = link;
+    await client.from('users').update({ wallet }).eq('email', email);
+    const refLink = `${window.location.origin}?ref=${email.split('@')[0]}`;
+    document.getElementById('referralLink').innerText = refLink;
     alert('Wallet saved');
   }
 
@@ -128,7 +129,5 @@
     const { data } = await client.from('users').select('points').eq('email', email).single();
     if (data) document.getElementById('totalStars').innerText = data.points || 0;
   }
-</script>
-
-</body>
+</script></body>
 </html>

@@ -1,166 +1,187 @@
-<!DOCTYPE html><html lang="fa">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TT Club Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TTToken Airdrop</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
-      font-family: Vazirmatn, sans-serif;
-      background-color: #000;
-      color: #fff;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      font-family: 'Arial', sans-serif;
+      background-color: #111;
+      color: #fff;
     }
     header {
+      background: #a00;
       padding: 1rem;
-      background-color: #111;
-      font-size: 1.5rem;
+      text-align: center;
+      font-size: 1.8rem;
       font-weight: bold;
     }
     nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
       background: #222;
     }
     nav button {
-      background: transparent;
+      padding: 0.7rem;
       border: none;
-      color: #ccc;
-      padding: 1rem;
+      background: #222;
+      color: white;
       font-size: 1rem;
       cursor: pointer;
     }
-    nav button.active {
-      color: #fff;
-      border-bottom: 2px solid #ff0;
+    nav button.active, nav button:hover {
+      background: #a00;
     }
     section {
       display: none;
       padding: 2rem;
+      max-width: 600px;
+      margin: auto;
     }
     section.active {
       display: block;
     }
-    input {
-      padding: 0.5rem;
-      margin: 0.5rem;
-      width: 70%;
+    input, button {
+      padding: 0.6rem;
+      margin: 0.5rem 0;
+      width: 100%;
     }
-    button.task {
-      background: #333;
-      color: #fff;
-      border: 1px solid #555;
-      padding: 0.75rem 1.5rem;
-      margin: 0.5rem;
-      cursor: pointer;
-      border-radius: 1rem;
-    }
-    .referral-box {
-      background: #111;
+    .task-box {
+      background: #222;
       padding: 1rem;
-      margin-top: 1rem;
-      border-radius: 1rem;
-      border: 1px solid #333;
+      margin: 1rem 0;
+      border-radius: 8px;
+      position: relative;
     }
-    footer {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #888;
+    .stars {
+      color: gold;
+      font-size: 1rem;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+    }
+    .logo {
+      text-align: center;
+      margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <header>باشگاه طرفداران تراکتور (TT)</header>
-  <nav>
-    <button onclick="showTab('email')">ثبت ایمیل</button>
+  <header>TTToken Airdrop</header>
+  <div class="logo">لوگوی تراکتور</div>  <nav>
+    <button onclick="showTab('email')" class="active">ایمیل</button>
     <button onclick="showTab('tasks')">تسک‌ها</button>
     <button onclick="showTab('wallet')">کیف پول</button>
     <button onclick="showTab('referral')">دعوت</button>
     <button onclick="showTab('dashboard')">داشبورد</button>
+    <button onclick="showTab('about')">درباره</button>
   </nav>  <section id="email" class="active">
     <h2>ثبت ایمیل</h2>
-    <input type="email" id="emailInput" placeholder="ایمیل خود را وارد کنید">
-    <br>
-    <button onclick="saveEmail()">ذخیره ایمیل</button>
+    <input type="email" id="emailInput" placeholder="ایمیل خود را وارد کنید"/>
+    <button onclick="saveEmail()">ثبت ایمیل</button>
   </section>  <section id="tasks">
     <h2>تسک‌ها</h2>
-    <button class="task" onclick="window.open('https://t.me/tt_memecoin', '_blank'); setTimeout(() => completeTask('telegram'), 2000)">عضویت در تلگرام</button>
-    <button class="task" onclick="window.open('https://www.instagram.com/tttoken1970', '_blank'); setTimeout(() => completeTask('instagram'), 2000)">فالو اینستاگرام</button>
-    <button class="task" onclick="window.open('https://x.com/tractormemecoin', '_blank'); setTimeout(() => completeTask('twitter'), 2000)">فالو ایکس</button>
+    <div class="task-box">
+      <button onclick="openAndEnable('https://t.me/tt_memecoin', 'telegram_done')">عضویت در تلگرام</button>
+      <div class="stars">5 ★</div>
+    </div>
+    <div class="task-box">
+      <button onclick="openAndEnable('https://www.instagram.com/tttoken1970', 'instagram_done')">فالو اینستاگرام</button>
+      <div class="stars">5 ★</div>
+    </div>
+    <div class="task-box">
+      <button onclick="openAndEnable('https://x.com/tractormemecoin', 'x_done')">فالو ایکس (توییتر)</button>
+      <div class="stars">5 ★</div>
+    </div>
   </section>  <section id="wallet">
-    <h2>کیف پول خود را وارد کنید</h2>
-    <input id="walletInput" placeholder="آدرس کیف پول (TRC20)">
-    <br>
+    <h2>ثبت کیف پول TON</h2>
+    <input type="text" id="walletInput" placeholder="آدرس کیف پول TON را وارد کنید"/>
     <button onclick="saveWallet()">ذخیره کیف پول</button>
   </section>  <section id="referral">
-    <h2>دعوت دوستان</h2>
-    <p>با دعوت هر نفر، امتیاز بگیر!</p>
-    <div class="referral-box">
-      <p>لینک دعوت شما:</p>
-      <p id="referralLink">اینجا ظاهر می‌شود</p>
-    </div>
+    <h2>لینک دعوت شما</h2>
+    <p id="referralLink">ابتدا ثبت‌نام را کامل کنید</p>
   </section>  <section id="dashboard">
-    <h2>داشبورد</h2>
-    <p>مجموع امتیازها:</p>
-    <h1 id="totalStars">0</h1>
-    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/24/Tractor_Sazi_F.C._logo.svg/1200px-Tractor_Sazi_F.C._logo.svg.png" width="120">
-  </section>  <footer>
-    طراحی شده با عشق برای طرفداران تراکتور | نسخه اولیه 1970
-  </footer>  <script>
-    const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
-    const SUPABASE_KEY = "YOUR_SUPABASE_KEY_HERE";
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
+    <h2>امتیاز شما</h2>
+    <div>امتیاز کل: <span id="totalStars">0</span> ★</div>
+  </section>  <section id="about">
+    <h2>درباره پروژه</h2>
+    <p>TTToken پروژه‌ای اجتماعی برای هواداران تراکتور</p>
+  </section><script>
+  const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOi..."; // کوتاه شده برای نمایش
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    function showTab(id) {
-      tabs.forEach(t => document.getElementById(t)?.classList.remove('active'));
-      document.getElementById(id)?.classList.add('active');
-      if (id === 'dashboard') loadDashboard();
-    }
+  const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'about'];
 
-    async function saveEmail() {
-      const email = document.getElementById('emailInput').value.trim().toLowerCase();
-      if (!email.includes('@')) return alert('ایمیل معتبر نیست');
-      localStorage.setItem('tt_email', email);
-      const { error } = await client.from('users').upsert({ email }, { onConflict: ['email'] });
-      if (error) return alert('خطا در ذخیره ایمیل');
-      alert('ایمیل ذخیره شد');
-    }
+  function showTab(id) {
+    tabs.forEach(t => document.getElementById(t).classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    if (id === 'dashboard') loadDashboard();
+    if (id === 'referral') showReferral();
+  }
 
-    async function completeTask(task) {
-      const email = localStorage.getItem('tt_email');
-      if (!email) return alert('لطفا ابتدا ایمیل ذخیره کنید');
-      const { data, error } = await client.from('users').select(`${task}, points`).eq('email', email).single();
-      if (error || !data) return alert('کاربر یافت نشد');
-      if (data[task]) return alert('قبلا انجام شده');
-      const newPoints = (data.points || 0) + 5;
-      const update = { points: newPoints };
-      update[task] = true;
-      const { error: updateError } = await client.from('users').update(update).eq('email', email);
-      if (updateError) return alert('خطا در ذخیره تسک');
-      alert('تسک انجام شد');
-    }
+  async function saveEmail() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email.includes('@')) return alert('ایمیل معتبر نیست');
+    localStorage.setItem('tt_email', email);
 
-    async function saveWallet() {
-      const wallet = document.getElementById('walletInput').value.trim();
-      const email = localStorage.getItem('tt_email');
-      if (!email) return alert('لطفا ابتدا ایمیل ذخیره کنید');
-      const { error } = await client.from('users').update({ wallet }).eq('email', email);
-      if (error) return alert('خطا در ذخیره کیف پول');
-      const refCode = email.split('@')[0];
-      const link = `${window.location.origin}?ref=${refCode}`;
-      document.getElementById('referralLink').innerText = link;
-      alert('ذخیره شد');
-    }
+    const { error } = await client.from('users').upsert({ email }, { onConflict: ['email'] });
+    if (error) return alert('ثبت ایمیل با خطا مواجه شد');
+    alert('ایمیل ثبت شد');
+  }
 
-    async function loadDashboard() {
-      const email = localStorage.getItem('tt_email');
-      if (!email) return;
-      const { data, error } = await client.from('users').select('points').eq('email', email).single();
-      if (data) document.getElementById('totalStars').innerText = data.points || 0;
-    }
-  </script></body>
+  async function openAndEnable(url, task) {
+    window.open(url, '_blank');
+    setTimeout(() => completeTask(task), 3000); // بعد از ۳ ثانیه فعال‌سازی
+  }
+
+  async function completeTask(task) {
+    const email = localStorage.getItem('tt_email');
+    if (!email) return alert('لطفا ابتدا ایمیل ثبت کنید');
+
+    const { data, error } = await client.from('users').select(`${task}, points`).eq('email', email).single();
+    if (error || !data) return alert('کاربر یافت نشد');
+
+    if (data[task]) return alert('این تسک قبلا انجام شده');
+    const newPoints = (data.points || 0) + 5;
+    const update = {}; update[task] = true; update.points = newPoints;
+
+    const { error: updateError } = await client.from('users').update(update).eq('email', email);
+    if (updateError) return alert('خطا در ثبت تسک');
+    alert('تسک انجام شد');
+  }
+
+  async function saveWallet() {
+    const wallet = document.getElementById('walletInput').value.trim();
+    const email = localStorage.getItem('tt_email');
+    if (!email) return alert('لطفا ابتدا ایمیل ثبت کنید');
+
+    const { error } = await client.from('users').update({ wallet }).eq('email', email);
+    if (error) return alert('خطا در ثبت کیف پول');
+
+    const refCode = email.split('@')[0];
+    const link = `${window.location.origin}?ref=${refCode}`;
+    document.getElementById('referralLink').innerText = link;
+    alert('کیف پول ثبت شد');
+  }
+
+  async function loadDashboard() {
+    const email = localStorage.getItem('tt_email');
+    if (!email) return;
+    const { data } = await client.from('users').select('points').eq('email', email).single();
+    if (data) document.getElementById('totalStars').innerText = data.points || 0;
+  }
+
+  function showReferral() {
+    const email = localStorage.getItem('tt_email');
+    if (!email) return;
+    const refCode = email.split('@')[0];
+    document.getElementById('referralLink').innerText = `${window.location.origin}?ref=${refCode}`;
+  }
+</script></body>
 </html>

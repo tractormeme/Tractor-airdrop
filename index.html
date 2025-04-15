@@ -82,13 +82,22 @@
       from {opacity: 0;}
       to {opacity: 1;}
     }
+    #referralLink {
+      background: #111;
+      padding: 0.8rem;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      color: #0cf;
+      user-select: all;
+    }
   </style>
 </head>
 <body>
 
   <header>
-    <div>TTToken Airdrop</div>
-    <div style="font-size: 1rem; font-weight: normal;">لوگوی تراکتور</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Tractor_Sazi_Tabriz_FC_logo.png" alt="Tractor Logo" class="logo" />
+    TTToken Airdrop
   </header>
 
   <nav>
@@ -107,17 +116,14 @@
 
   <section id="tasks">
     <h2>انجام تسک‌ها</h2>
-
     <div class="task-box">
       <a href="https://t.me/tt_memecoin" target="_blank" onclick="activateTask('telegram')">عضویت در تلگرام</a>
       <button id="btn-telegram" disabled onclick="completeTask('telegram_done')">ثبت انجام</button>
     </div>
-
     <div class="task-box">
       <a href="https://www.instagram.com/tttoken1970" target="_blank" onclick="activateTask('instagram')">فالو اینستاگرام</a>
       <button id="btn-instagram" disabled onclick="completeTask('instagram_done')">ثبت انجام</button>
     </div>
-
     <div class="task-box">
       <a href="https://x.com/tractormemecoin" target="_blank" onclick="activateTask('x')">فالو X</a>
       <button id="btn-x" disabled onclick="completeTask('x_done')">ثبت انجام</button>
@@ -132,7 +138,7 @@
 
   <section id="referral">
     <h2>لینک دعوت شما</h2>
-    <p id="referralLink">ابتدا ایمیل را ثبت کنید</p>
+    <p id="referralLink" onclick="copyReferral()">ابتدا ایمیل را ثبت و کیف پول را وارد کنید</p>
   </section>
 
   <section id="dashboard">
@@ -144,7 +150,6 @@
   const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk";
   const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
   const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
 
   function showTab(id) {
@@ -158,7 +163,6 @@
   async function saveEmail() {
     const email = document.getElementById('emailInput').value.trim();
     if (!email.includes('@')) return alert('ایمیل نامعتبر است');
-
     localStorage.setItem('tt_email', email);
     const { error } = await client.from('users').upsert({ email }, { onConflict: ['email'] });
     if (error) return alert('ثبت ایمیل با خطا انجام شد');
@@ -174,33 +178,39 @@
   async function completeTask(task) {
     const email = localStorage.getItem('tt_email');
     if (!email) return alert('ابتدا ایمیل خود را ثبت کنید');
-
     const { data, error } = await client.from('users').select(`${task}, points`).eq('email', email).single();
     if (error || !data) return alert('خطا در دریافت اطلاعات');
-
     if (data[task]) return alert('این تسک قبلاً انجام شده');
     const newPoints = (data.points || 0) + 5;
     const update = {}; update[task] = true; update.points = newPoints;
-
     const { error: updateError } = await client.from('users').update(update).eq('email', email);
     if (updateError) return alert('خطا در ثبت تسک');
     alert('تسک ثبت شد');
-
-    if (task === 'telegram_done') loadDashboard(); // optional refresh
+    if (task === 'telegram_done') loadDashboard();
   }
 
   async function saveWallet() {
     const wallet = document.getElementById('walletInput').value.trim();
     const email = localStorage.getItem('tt_email');
     if (!email) return alert('ابتدا ایمیل خود را ثبت کنید');
-
     const { error } = await client.from('users').update({ wallet }).eq('email', email);
     if (error) return alert('ذخیره کیف پول با خطا مواجه شد');
-
     const refCode = email.split('@')[0];
-    const link = `${window.location.origin}?ref=${refCode}`;
-    document.getElementById('referralLink').innerText = link;
-    alert('کیف پول ثبت شد');
+    const path = window.location.pathname.split('/')[1]; 
+    const link = `${window.location.origin}/${path}/?ref=${refCode}`;
+    const linkElem = document.getElementById('referralLink');
+    linkElem.innerText = link;
+    linkElem.setAttribute('data-link', link);
+    alert('کیف پول ثبت شد و لینک دعوت ساخته شد');
+  }
+
+  function copyReferral() {
+    const linkElem = document.getElementById('referralLink');
+    const link = linkElem.getAttribute('data-link');
+    if (!link) return;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('لینک دعوت کپی شد');
+    });
   }
 
   async function loadDashboard() {

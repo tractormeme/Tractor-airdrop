@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html><html lang="fa">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,114 +7,134 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Vazir', sans-serif;
       background-color: #111;
       color: #fff;
+      direction: rtl;
+      animation: fadeIn 1.2s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     header {
       background: #a00;
-      padding: 1rem;
+      padding: 1.5rem;
       text-align: center;
-      font-size: 1.8rem;
-      font-weight: bold;
+      font-size: 2rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
     }
     nav {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       background: #222;
     }
     nav button {
-      padding: 0.7rem;
+      padding: 1rem;
       border: none;
       background: #222;
       color: white;
       font-size: 1rem;
       cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
     nav button.active, nav button:hover {
       background: #a00;
+      transform: scale(1.05);
     }
     section {
       display: none;
       padding: 2rem;
       max-width: 600px;
       margin: auto;
+      animation: fadeIn 0.6s ease-in;
     }
     section.active {
       display: block;
     }
     input, button {
-      padding: 0.6rem;
+      padding: 0.7rem;
       margin: 0.5rem 0;
       width: 100%;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
     }
     .task-box {
       background: #222;
       padding: 1rem;
       margin: 1rem 0;
-      border-radius: 8px;
-      position: relative;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease;
+    }
+    .task-box:hover {
+      transform: translateY(-3px);
+    }
+    .task-box a {
+      color: #0af;
+      text-decoration: none;
+      font-weight: bold;
     }
     .stars {
       color: gold;
-      font-size: 1rem;
-      position: absolute;
-      top: 10px;
-      right: 15px;
-    }
-    .logo {
-      text-align: center;
-      margin-top: 1rem;
+      font-size: 1.2rem;
     }
   </style>
 </head>
-<body>
-  <header>TTToken Airdrop</header>
-  <div class="logo">لوگوی تراکتور</div>  <nav>
-    <button onclick="showTab('email')" class="active">ایمیل</button>
-    <button onclick="showTab('tasks')">تسک‌ها</button>
-    <button onclick="showTab('wallet')">کیف پول</button>
-    <button onclick="showTab('referral')">دعوت</button>
-    <button onclick="showTab('dashboard')">داشبورد</button>
-    <button onclick="showTab('about')">درباره</button>
-  </nav>  <section id="email" class="active">
-    <h2>ثبت ایمیل</h2>
-    <input type="email" id="emailInput" placeholder="ایمیل خود را وارد کنید"/>
-    <button onclick="saveEmail()">ثبت ایمیل</button>
-  </section>  <section id="tasks">
-    <h2>تسک‌ها</h2>
-    <div class="task-box">
-      <button onclick="openAndEnable('https://t.me/tt_memecoin', 'telegram_done')">عضویت در تلگرام</button>
-      <div class="stars">5 ★</div>
-    </div>
-    <div class="task-box">
-      <button onclick="openAndEnable('https://www.instagram.com/tttoken1970', 'instagram_done')">فالو اینستاگرام</button>
-      <div class="stars">5 ★</div>
-    </div>
-    <div class="task-box">
-      <button onclick="openAndEnable('https://x.com/tractormemecoin', 'x_done')">فالو ایکس (توییتر)</button>
-      <div class="stars">5 ★</div>
-    </div>
-  </section>  <section id="wallet">
-    <h2>ثبت کیف پول TON</h2>
-    <input type="text" id="walletInput" placeholder="آدرس کیف پول TON را وارد کنید"/>
-    <button onclick="saveWallet()">ذخیره کیف پول</button>
-  </section>  <section id="referral">
-    <h2>لینک دعوت شما</h2>
-    <p id="referralLink">ابتدا ثبت‌نام را کامل کنید</p>
-  </section>  <section id="dashboard">
-    <h2>امتیاز شما</h2>
-    <div>امتیاز کل: <span id="totalStars">0</span> ★</div>
-  </section>  <section id="about">
-    <h2>درباره پروژه</h2>
-    <p>TTToken پروژه‌ای اجتماعی برای هواداران تراکتور</p>
-  </section><script>
+<body><header>لوگوی تراکتور | TTToken Airdrop</header>
+<nav>
+  <button onclick="showTab('email')" class="active">ایمیل</button>
+  <button onclick="showTab('tasks')">ماموریت‌ها</button>
+  <button onclick="showTab('wallet')">کیف پول</button>
+  <button onclick="showTab('referral')">رفرال</button>
+  <button onclick="showTab('dashboard')">داشبورد</button>
+</nav><section id="email" class="active">
+  <h2>ثبت ایمیل</h2>
+  <input type="email" id="emailInput" placeholder="ایمیل خود را وارد کنید"/>
+  <button onclick="saveEmail()">ثبت ایمیل</button>
+</section><section id="tasks">
+  <h2>ماموریت‌ها</h2>
+  <div class="task-box">
+    <a href="https://t.me/tt_memecoin" target="_blank" onclick="setTaskReady('telegram')">عضویت در تلگرام</a>
+    <button onclick="completeTask('telegram_done')">انجام شد</button>
+    <div class="stars">5 ★</div>
+  </div>
+  <div class="task-box">
+    <a href="https://www.instagram.com/tttoken1970" target="_blank" onclick="setTaskReady('instagram')">فالو اینستاگرام</a>
+    <button onclick="completeTask('instagram_done')">انجام شد</button>
+    <div class="stars">5 ★</div>
+  </div>
+  <div class="task-box">
+    <a href="https://x.com/tractormemecoin" target="_blank" onclick="setTaskReady('x')">فالو ایکس</a>
+    <button onclick="completeTask('x_done')">انجام شد</button>
+    <div class="stars">5 ★</div>
+  </div>
+</section><section id="wallet">
+  <h2>وارد کردن کیف پول</h2>
+  <input type="text" id="walletInput" placeholder="TON Wallet"/>
+  <button onclick="saveWallet()">ثبت کیف پول</button>
+</section><section id="referral">
+  <h2>رفرال شما</h2>
+  <p id="referralLink">ابتدا ایمیل و کیف پول ثبت شود</p>
+</section><section id="dashboard">
+  <h2>امتیاز شما</h2>
+  <div>امتیاز کل: <span id="totalStars">0</span> ★</div>
+</section><script>
   const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOi..."; // کوتاه شده برای نمایش
+  const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY";
   const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const taskReady = {};
 
-  const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'about'];
+  const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
 
   function showTab(id) {
     tabs.forEach(t => document.getElementById(t).classList.remove('active'));
@@ -122,7 +142,10 @@
     document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     if (id === 'dashboard') loadDashboard();
-    if (id === 'referral') showReferral();
+  }
+
+  function setTaskReady(task) {
+    taskReady[task] = true;
   }
 
   async function saveEmail() {
@@ -131,43 +154,42 @@
     localStorage.setItem('tt_email', email);
 
     const { error } = await client.from('users').upsert({ email }, { onConflict: ['email'] });
-    if (error) return alert('ثبت ایمیل با خطا مواجه شد');
-    alert('ایمیل ثبت شد');
-  }
-
-  async function openAndEnable(url, task) {
-    window.open(url, '_blank');
-    setTimeout(() => completeTask(task), 3000); // بعد از ۳ ثانیه فعال‌سازی
+    if (error) return alert('ثبت ایمیل ناموفق بود');
+    alert('ایمیل با موفقیت ثبت شد');
   }
 
   async function completeTask(task) {
     const email = localStorage.getItem('tt_email');
-    if (!email) return alert('لطفا ابتدا ایمیل ثبت کنید');
+    if (!email) return alert('لطفاً ابتدا ایمیل خود را ثبت کنید');
+
+    const taskKey = task.split('_')[0];
+    if (!taskReady[taskKey]) return alert('ابتدا روی لینک ماموریت کلیک کنید');
 
     const { data, error } = await client.from('users').select(`${task}, points`).eq('email', email).single();
-    if (error || !data) return alert('کاربر یافت نشد');
+    if (error || !data) return alert('خطا در دریافت اطلاعات کاربر');
 
-    if (data[task]) return alert('این تسک قبلا انجام شده');
+    if (data[task]) return alert('این ماموریت قبلاً انجام شده');
     const newPoints = (data.points || 0) + 5;
     const update = {}; update[task] = true; update.points = newPoints;
 
     const { error: updateError } = await client.from('users').update(update).eq('email', email);
-    if (updateError) return alert('خطا در ثبت تسک');
-    alert('تسک انجام شد');
+    if (updateError) return alert('بروزرسانی ماموریت با خطا مواجه شد');
+    alert('ماموریت با موفقیت ثبت شد');
+    loadDashboard();
   }
 
   async function saveWallet() {
     const wallet = document.getElementById('walletInput').value.trim();
     const email = localStorage.getItem('tt_email');
-    if (!email) return alert('لطفا ابتدا ایمیل ثبت کنید');
+    if (!email) return alert('ایمیل را ابتدا ثبت کنید');
 
     const { error } = await client.from('users').update({ wallet }).eq('email', email);
-    if (error) return alert('خطا در ثبت کیف پول');
+    if (error) return alert('ذخیره کیف پول ناموفق بود');
 
     const refCode = email.split('@')[0];
     const link = `${window.location.origin}?ref=${refCode}`;
     document.getElementById('referralLink').innerText = link;
-    alert('کیف پول ثبت شد');
+    alert('کیف پول ذخیره شد');
   }
 
   async function loadDashboard() {
@@ -175,13 +197,6 @@
     if (!email) return;
     const { data } = await client.from('users').select('points').eq('email', email).single();
     if (data) document.getElementById('totalStars').innerText = data.points || 0;
-  }
-
-  function showReferral() {
-    const email = localStorage.getItem('tt_email');
-    if (!email) return;
-    const refCode = email.split('@')[0];
-    document.getElementById('referralLink').innerText = `${window.location.origin}?ref=${refCode}`;
   }
 </script></body>
 </html>

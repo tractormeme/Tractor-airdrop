@@ -6,83 +6,20 @@
   <title>TTToken Airdrop</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #111;
-      color: #fff;
-    }
-    header {
-      background-color: #a00;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-    .logo-box {
-      text-align: center;
-      margin: 15px 0;
-    }
-    .logo-box img {
-      width: 100px;
-    }
-    .year {
-      color: #aaa;
-      margin-top: 5px;
-    }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      background-color: #222;
-    }
-    nav button {
-      flex: 1;
-      min-width: 100px;
-      padding: 1rem;
-      border: none;
-      background: #222;
-      color: white;
-      cursor: pointer;
-    }
-    nav button.active, nav button:hover {
-      background-color: #a00;
-    }
-    section {
-      display: none;
-      padding: 2rem;
-      max-width: 600px;
-      margin: auto;
-    }
-    section.active {
-      display: block;
-    }
-    input, button {
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      width: 100%;
-    }
-    .task-box {
-      background: #222;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-    .task-box:hover {
-      background: #333;
-    }
-    .task-box a {
-      color: #0af;
-      text-decoration: none;
-      display: block;
-      font-weight: bold;
-    }
-    .stars {
-      color: gold;
-      font-size: 1.2rem;
-      margin-top: 5px;
-    }
+    body { margin: 0; font-family: 'Arial'; background: #111; color: #fff; }
+    header { background: #a00; padding: 1rem; text-align: center; font-size: 1.8rem; font-weight: bold; }
+    .logo-box { text-align: center; margin: 15px 0; }
+    .logo-box img { width: 100px; }
+    nav { display: flex; flex-wrap: wrap; justify-content: center; background: #222; }
+    nav button { flex: 1; min-width: 100px; padding: 1rem; background: #222; color: white; border: none; cursor: pointer; }
+    nav button.active, nav button:hover { background: #a00; }
+    section { display: none; padding: 2rem; max-width: 600px; margin: auto; }
+    section.active { display: block; }
+    input, button { padding: 0.5rem; margin: 0.5rem 0; width: 100%; }
+    .task-box { background: #222; padding: 1rem; margin: 1rem 0; border-radius: 8px; }
+    .task-box:hover { background: #333; }
+    .task-box a { color: #0af; font-weight: bold; text-decoration: none; display: block; }
+    .stars { color: gold; font-size: 1.2rem; margin-top: 5px; }
   </style>
 </head>
 <body>
@@ -90,71 +27,60 @@
   <div class="logo-box">
     <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo"/>
     <div class="year">1970</div>
-  </div>  
+  </div>
   <nav>
     <button onclick="showTab('email')" class="active">Email</button>
     <button onclick="showTab('tasks')">Tasks</button>
     <button onclick="showTab('wallet')">Wallet</button>
     <button onclick="showTab('referral')">Referral</button>
     <button onclick="showTab('dashboard')">Dashboard</button>
-    <button onclick="showTab('game')">Game</button>
-  </nav>  
+  </nav>
 
   <section id="email" class="active">
     <h2>Register Email</h2>
     <input type="email" id="emailInput" placeholder="Enter your email"/>
     <button onclick="saveEmail()">Save Email</button>
-  </section>  
+  </section>
 
   <section id="tasks">
     <h2>Complete Social Tasks</h2>
     <div class="task-box">
-      <a href="https://t.me/tt_memecoin" target="_blank" class="task-link" onclick="awardStars('telegram')">Join our Telegram</a>
+      <a href="https://t.me/tt_memecoin" target="_blank" onclick="awardStars('telegram')">Join Telegram</a>
       <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <a href="https://www.instagram.com/tttoken1970" target="_blank" class="task-link" onclick="awardStars('instagram')">Follow us on Instagram</a>
+      <a href="https://www.instagram.com/tttoken1970" target="_blank" onclick="awardStars('instagram')">Follow Instagram</a>
       <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <a href="https://x.com/tractormemecoin" target="_blank" class="task-link" onclick="awardStars('x')">Follow us on X</a>
+      <a href="https://x.com/tractormemecoin" target="_blank" onclick="awardStars('x')">Follow on X</a>
       <div class="stars">5 ★</div>
     </div>
-  </section>  
+  </section>
 
   <section id="wallet">
-    <h2>Submit Your TON Wallet</h2>
+    <h2>Submit TON Wallet</h2>
     <input type="text" id="walletInput" placeholder="TON wallet address"/>
     <button onclick="saveWallet()">Save Wallet</button>
-  </section>  
+  </section>
 
   <section id="referral">
     <h2>Your Referral Link</h2>
     <p id="referralLink">Complete previous steps to generate your referral link.</p>
-  </section>  
+  </section>
 
   <section id="dashboard">
     <h2>Your Dashboard</h2>
-    <div id="pointsBox" style="font-size: 1.5rem; color: gold; text-align: center; margin-top: 20px;">
-      Total Stars: <span id="totalStars">0</span> ★
-    </div>
-    <p style="text-align: center; margin-top: 10px; color: #888;">Complete more tasks or invite friends to earn more stars!</p>
-  </section>  
-
-  <section id="game">
-    <h2>Game Time!</h2>
-    <p style="text-align:center; font-size: 1.2rem; margin-top: 30px;">
-      تراکتور در حال آماده‌سازی برای شخم زدن بلاکچین است...
-    </p>
-  </section>  
+    <div style="text-align:center; font-size: 1.5rem; color: gold;">Total Stars: <span id="totalStars">0</span> ★</div>
+  </section>
 
   <script>
     const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'game'];
     let totalStars = 0;
+    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
 
     function showTab(id) {
       tabs.forEach(t => document.getElementById(t).classList.remove('active'));
@@ -165,20 +91,15 @@
     }
 
     async function saveEmail() {
-      const email = document.getElementById('emailInput').value.trim();
+      const email = document.getElementById('emailInput').value;
       if (!email.includes('@')) return alert('Invalid email!');
-      const existing = localStorage.getItem('tt_email');
-      if (existing && existing !== email) return alert('You already registered an email.');
-
-      const { data, error } = await client.from('users').select('email').eq('email', email);
-      if (data.length > 0) return alert('Email already registered.');
-
       const refCode = email.split('@')[0];
-      const { error: insertError } = await client.from('users').insert([
-        { email, ref_code: refCode, points: 10 }
-      ]);
-      if (insertError) return alert('Error saving email');
 
+      const { error } = await client.from('users').upsert([
+        { email, ref_code: refCode }
+      ], { onConflict: ['email'] });
+
+      if (error) return alert('Error saving email');
       localStorage.setItem('tt_email', email);
       alert('Email saved!');
     }
@@ -188,13 +109,21 @@
       const email = localStorage.getItem('tt_email');
       if (!email) return alert('Please save your email first.');
 
-      const { error } = await client.from('users').update({
-        wallet: wallet
+      const { data, error } = await client
+        .from('users')
+        .select('wallet')
+        .eq('email', email)
+        .single();
+
+      if (data?.wallet) return alert('Wallet already submitted.');
+
+      const { error: updateError } = await client.from('users').update({
+        wallet: wallet,
+        points: (data?.points || 0) + 10
       }).eq('email', email);
 
-      const refCode = email.split('@')[0];
-      const refLink = `${window.location.origin}?ref=${refCode}`;
-      document.getElementById('referralLink').innerText = refLink;
+      if (updateError) return alert('Error saving wallet');
+
       alert('Wallet saved!');
     }
 
@@ -202,24 +131,33 @@
       const email = localStorage.getItem('tt_email');
       if (!email) return alert('Please save your email first.');
 
-      const { data, error } = await client.from('users').select(task + '_done').eq('email', email).single();
-      if (data && data[task + '_done']) return alert('You already claimed this task.');
+      const { data, error } = await client
+        .from('users')
+        .select(`${task}_done, points`)
+        .eq('email', email)
+        .single();
 
-      const pointsToAdd = 5;
-      await client.from('users').update({
-        points: client.rpc('add_points', { email_arg: email, amount_arg: pointsToAdd }),
-        [task + '_done']: true
-      }).eq('email', email);
+      if (data && data[`${task}_done`]) return alert('Already claimed.');
 
-      totalStars += pointsToAdd;
+      const newPoints = (data?.points || 0) + 5;
+
+      const { error: updateError } = await client
+        .from('users')
+        .update({ [`${task}_done`]: true, points: newPoints })
+        .eq('email', email);
+
+      if (updateError) return alert('Error saving task.');
+
+      totalStars = newPoints;
       document.getElementById('totalStars').innerText = totalStars;
+      alert('5 Stars added!');
     }
 
     async function loadDashboard() {
       const email = localStorage.getItem('tt_email');
       if (!email) return;
 
-      const { data } = await client
+      const { data, error } = await client
         .from('users')
         .select('points')
         .eq('email', email)

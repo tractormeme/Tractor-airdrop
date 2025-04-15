@@ -19,17 +19,6 @@
       font-size: 1.8rem;
       font-weight: bold;
     }
-    .logo-box {
-      text-align: center;
-      margin: 15px 0;
-    }
-    .logo-box img {
-      width: 100px;
-    }
-    .year {
-      color: #aaa;
-      margin-top: 5px;
-    }
     nav {
       display: flex;
       flex-wrap: wrap;
@@ -67,7 +56,6 @@
       padding: 1rem;
       margin: 1rem 0;
       border-radius: 8px;
-      transition: 0.3s;
     }
     .task-box:hover {
       background: #333;
@@ -87,74 +75,61 @@
 </head>
 <body>
   <header>TTToken Airdrop</header>
-  <div class="logo-box">
-    <img src="https://img.icons8.com/ios-filled/100/ffffff/tractor.png" alt="Tractor Logo"/>
-    <div class="year">1970</div>
-  </div>  
   <nav>
     <button onclick="showTab('email')" class="active">Email</button>
     <button onclick="showTab('tasks')">Tasks</button>
     <button onclick="showTab('wallet')">Wallet</button>
     <button onclick="showTab('referral')">Referral</button>
     <button onclick="showTab('dashboard')">Dashboard</button>
-    <button onclick="showTab('game')">Game</button>
-  </nav>  
+  </nav>
 
   <section id="email" class="active">
     <h2>Register Email</h2>
     <input type="email" id="emailInput" placeholder="Enter your email"/>
     <button onclick="saveEmail()">Save Email</button>
-  </section>  
+  </section>
 
   <section id="tasks">
     <h2>Complete Social Tasks</h2>
     <div class="task-box">
-      <a href="https://t.me/tt_memecoin" target="_blank" class="task-link" onclick="awardStars(5)">Join our Telegram</a>
+      <a href="#" onclick="awardStars(5)">Join Telegram</a>
       <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <a href="https://www.instagram.com/tttoken1970" target="_blank" class="task-link" onclick="awardStars(5)">Follow us on Instagram</a>
+      <a href="#" onclick="awardStars(5)">Follow Instagram</a>
       <div class="stars">5 ★</div>
     </div>
     <div class="task-box">
-      <a href="https://x.com/tractormemecoin" target="_blank" class="task-link" onclick="awardStars(5)">Follow us on X</a>
+      <a href="#" onclick="awardStars(5)">Follow X</a>
       <div class="stars">5 ★</div>
     </div>
-  </section>  
+  </section>
 
   <section id="wallet">
     <h2>Submit Your TON Wallet</h2>
     <input type="text" id="walletInput" placeholder="TON wallet address"/>
     <button onclick="saveWallet()">Save Wallet</button>
-  </section>  
+  </section>
 
   <section id="referral">
     <h2>Your Referral Link</h2>
     <p id="referralLink">Complete previous steps to generate your referral link.</p>
-    <button onclick="simulateReferral()">Simulate 1 Referral</button>
-  </section>  
+    <button onclick="simulateReferral()">Simulate Referral</button>
+  </section>
 
   <section id="dashboard">
     <h2>Your Dashboard</h2>
-    <div id="pointsBox" style="font-size: 1.5rem; color: gold; text-align: center; margin-top: 20px;">
+    <div id="pointsBox">
       Total Stars: <span id="totalStars">0</span> ★
     </div>
-    <p style="text-align: center; margin-top: 10px; color: #888;">Complete more tasks or invite friends to earn more stars!</p>
-  </section>  
-
-  <section id="game">
-    <h2>Game Time!</h2>
-    <p style="text-align:center; font-size: 1.2rem; margin-top: 30px;">
-      تراکتور در حال آماده‌سازی برای شخم زدن بلاکچین است...
-    </p>
-  </section>  
+  </section>
 
   <script>
     const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF3c2dtbXRtb3lub2F6bWhkbHRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMjc2OTYsImV4cCI6MjA1OTkwMzY5Nn0.59N6CSSbvRb3utAM6P5GsPGqSAeSIwGfUYmm5BgHDNk";
+    const SUPABASE_KEY = "eyJhbGciOi...BgHDNk"; // کلیدت رو اینجا بذار
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard', 'game'];
+    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
     let totalStars = 0;
 
     function showTab(id) {
@@ -168,7 +143,6 @@
     async function saveEmail() {
       const email = document.getElementById('emailInput').value;
       if (!email.includes('@')) return alert('Invalid email!');
-
       const refCode = email.split('@')[0];
 
       const { error } = await client.from('users').upsert([
@@ -183,7 +157,7 @@
     async function saveWallet() {
       const wallet = document.getElementById('walletInput').value;
       const email = localStorage.getItem('tt_email');
-      if (!email) return alert('Please save your email first.');
+      if (!email) return alert('Save email first');
 
       const { error } = await client.from('users').update({
         wallet: wallet
@@ -194,7 +168,6 @@
       const refCode = email.split('@')[0];
       const refLink = `${window.location.origin}?ref=${refCode}`;
       document.getElementById('referralLink').innerText = refLink;
-      alert('Wallet saved!');
     }
 
     async function awardStars(amount) {
@@ -212,10 +185,8 @@
     async function simulateReferral() {
       const email = localStorage.getItem('tt_email');
       if (!email) return;
-
       totalStars += 10;
       document.getElementById('totalStars').innerText = totalStars;
-
       await client.from('users').update({
         referrals: 1,
         points: totalStars
@@ -225,14 +196,8 @@
     async function loadDashboard() {
       const email = localStorage.getItem('tt_email');
       if (!email) return;
-
-      const { data, error } = await client
-        .from('users')
-        .select('points, referrals')
-        .eq('email', email)
-        .single();
-
-      if (data) {
+      const { data, error } = await client.from('users').select('points').eq('email', email).single();
+      if (!error && data) {
         totalStars = data.points || 0;
         document.getElementById('totalStars').innerText = totalStars;
       }

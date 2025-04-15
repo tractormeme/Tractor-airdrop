@@ -1,177 +1,166 @@
 <!DOCTYPE html><html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TTToken Airdrop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TT Club Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    :root {
-      --primary: #e30613;
-      --dark: #0d0d0d;
-      --gray: #1a1a1a;
-      --light: #f4f4f4;
-      --accent: #ffbf00;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
+      font-family: Vazirmatn, sans-serif;
+      background-color: #000;
+      color: #fff;
       margin: 0;
-      font-family: 'Vazirmatn', sans-serif;
-      background-color: var(--dark);
-      color: var(--light);
-      direction: rtl;
+      padding: 0;
+      text-align: center;
     }
     header {
-      background: linear-gradient(90deg, var(--primary), #b30000);
       padding: 1rem;
-      text-align: center;
-      font-size: 2rem;
+      background-color: #111;
+      font-size: 1.5rem;
       font-weight: bold;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
     nav {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      background: var(--gray);
-      border-bottom: 1px solid #333;
+      background: #222;
     }
     nav button {
-      flex: 1 0 33%;
-      margin: 2px;
-      padding: 0.7rem;
-      font-size: 1rem;
-      border: none;
       background: transparent;
+      border: none;
       color: #ccc;
+      padding: 1rem;
+      font-size: 1rem;
       cursor: pointer;
-      transition: 0.3s;
     }
-    nav button:hover,
     nav button.active {
-      background: var(--primary);
-      color: white;
-      font-weight: bold;
+      color: #fff;
+      border-bottom: 2px solid #ff0;
     }
     section {
       display: none;
-      padding: 1.2rem;
-      max-width: 600px;
-      margin: auto;
-      animation: fadeIn 0.3s ease-in-out;
+      padding: 2rem;
     }
     section.active {
       display: block;
     }
-    input, button {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.8rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background: var(--gray);
-      color: white;
+    input {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      width: 70%;
     }
-    button {
-      background-color: var(--primary);
-      border: none;
+    button.task {
+      background: #333;
+      color: #fff;
+      border: 1px solid #555;
+      padding: 0.75rem 1.5rem;
+      margin: 0.5rem;
       cursor: pointer;
+      border-radius: 1rem;
     }
-    .task-box {
-      background: #1f1f1f;
+    .referral-box {
+      background: #111;
       padding: 1rem;
-      margin: 1rem 0;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      margin-top: 1rem;
+      border-radius: 1rem;
+      border: 1px solid #333;
     }
-    .task-box button {
-      width: auto;
-      background-color: var(--accent);
-      padding: 0.4rem 1rem;
-      color: #000;
-      font-weight: bold;
-    }
-    #tractor-logo {
-      max-width: 100px;
-      margin: 1rem auto;
-      display: block;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(255,255,255,0.2);
-    }
-    .center {
-      text-align: center;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #888;
     }
   </style>
 </head>
-<body>  <header>TTToken ایردراپ</header>  <nav>
-    <button onclick="showTab('email')" class="active">ایمیل</button>
-    <button onclick="showTab('tasks')">ماموریت‌ها</button>
+<body>
+  <header>باشگاه طرفداران تراکتور (TT)</header>
+  <nav>
+    <button onclick="showTab('email')">ثبت ایمیل</button>
+    <button onclick="showTab('tasks')">تسک‌ها</button>
     <button onclick="showTab('wallet')">کیف پول</button>
-    <button onclick="showTab('referral')">دعوت‌نامه</button>
+    <button onclick="showTab('referral')">دعوت</button>
     <button onclick="showTab('dashboard')">داشبورد</button>
   </nav>  <section id="email" class="active">
     <h2>ثبت ایمیل</h2>
-    <input type="email" id="emailInput" placeholder="ایمیل خود را وارد کنید"/>
+    <input type="email" id="emailInput" placeholder="ایمیل خود را وارد کنید">
+    <br>
     <button onclick="saveEmail()">ذخیره ایمیل</button>
   </section>  <section id="tasks">
-    <h2>ماموریت‌ها</h2>
-    <div class="task-box">
-      <span>عضویت در تلگرام</span>
-      <button onclick="openLinkAndEnable('telegram_done', 'https://t.me/tt_memecoin')">انجام</button>
-    </div>
-    <div class="task-box">
-      <span>فالو اینستاگرام</span>
-      <button onclick="openLinkAndEnable('instagram_done', 'https://www.instagram.com/tttoken1970')">انجام</button>
-    </div>
-    <div class="task-box">
-      <span>فالو ایکس (توییتر)</span>
-      <button onclick="openLinkAndEnable('x_done', 'https://x.com/tractormemecoin')">انجام</button>
-    </div>
+    <h2>تسک‌ها</h2>
+    <button class="task" onclick="window.open('https://t.me/tt_memecoin', '_blank'); setTimeout(() => completeTask('telegram'), 2000)">عضویت در تلگرام</button>
+    <button class="task" onclick="window.open('https://www.instagram.com/tttoken1970', '_blank'); setTimeout(() => completeTask('instagram'), 2000)">فالو اینستاگرام</button>
+    <button class="task" onclick="window.open('https://x.com/tractormemecoin', '_blank'); setTimeout(() => completeTask('twitter'), 2000)">فالو ایکس</button>
   </section>  <section id="wallet">
-    <h2>آدرس کیف پول</h2>
-    <input type="text" id="walletInput" placeholder="آدرس کیف پول TON"/>
-    <button onclick="saveWallet()">ذخیره</button>
+    <h2>کیف پول خود را وارد کنید</h2>
+    <input id="walletInput" placeholder="آدرس کیف پول (TRC20)">
+    <br>
+    <button onclick="saveWallet()">ذخیره کیف پول</button>
   </section>  <section id="referral">
     <h2>دعوت دوستان</h2>
-    <p id="referralLink">برای دریافت لینک دعوت، ابتدا ایمیل و کیف پول را ثبت کنید.</p>
-  </section>  <section id="dashboard" class="center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Tractor_FC_logo.png" id="tractor-logo" alt="لوگوی تراکتور"/>
-    <h3>داشبورد شما</h3>
-    <p>امتیازها، رفرال‌ها و ماموریت‌های انجام شده در این بخش نمایش داده می‌شود.</p>
-  </section>  <script>
+    <p>با دعوت هر نفر، امتیاز بگیر!</p>
+    <div class="referral-box">
+      <p>لینک دعوت شما:</p>
+      <p id="referralLink">اینجا ظاهر می‌شود</p>
+    </div>
+  </section>  <section id="dashboard">
+    <h2>داشبورد</h2>
+    <p>مجموع امتیازها:</p>
+    <h1 id="totalStars">0</h1>
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/24/Tractor_Sazi_F.C._logo.svg/1200px-Tractor_Sazi_F.C._logo.svg.png" width="120">
+  </section>  <footer>
+    طراحی شده با عشق برای طرفداران تراکتور | نسخه اولیه 1970
+  </footer>  <script>
+    const SUPABASE_URL = "https://qwsgmmtmoynoazmhdlth.supabase.co";
+    const SUPABASE_KEY = "YOUR_SUPABASE_KEY_HERE";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const tabs = ['email', 'tasks', 'wallet', 'referral', 'dashboard'];
+
     function showTab(id) {
-      document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      event.target.classList.add('active');
+      tabs.forEach(t => document.getElementById(t)?.classList.remove('active'));
+      document.getElementById(id)?.classList.add('active');
+      if (id === 'dashboard') loadDashboard();
     }
 
-    function openLinkAndEnable(key, url) {
-      window.open(url, '_blank');
-      localStorage.setItem(key, true);
-      alert("لینک باز شد. پس از انجام کار، دکمه را دوباره فشار دهید تا ثبت شود.");
+    async function saveEmail() {
+      const email = document.getElementById('emailInput').value.trim().toLowerCase();
+      if (!email.includes('@')) return alert('ایمیل معتبر نیست');
+      localStorage.setItem('tt_email', email);
+      const { error } = await client.from('users').upsert({ email }, { onConflict: ['email'] });
+      if (error) return alert('خطا در ذخیره ایمیل');
+      alert('ایمیل ذخیره شد');
     }
 
-    function saveEmail() {
-      const email = document.getElementById("emailInput").value;
-      localStorage.setItem("user_email", email);
-      alert("ایمیل ذخیره شد");
+    async function completeTask(task) {
+      const email = localStorage.getItem('tt_email');
+      if (!email) return alert('لطفا ابتدا ایمیل ذخیره کنید');
+      const { data, error } = await client.from('users').select(`${task}, points`).eq('email', email).single();
+      if (error || !data) return alert('کاربر یافت نشد');
+      if (data[task]) return alert('قبلا انجام شده');
+      const newPoints = (data.points || 0) + 5;
+      const update = { points: newPoints };
+      update[task] = true;
+      const { error: updateError } = await client.from('users').update(update).eq('email', email);
+      if (updateError) return alert('خطا در ذخیره تسک');
+      alert('تسک انجام شد');
     }
 
-    function saveWallet() {
-      const wallet = document.getElementById("walletInput").value;
-      localStorage.setItem("wallet_address", wallet);
-      alert("آدرس ذخیره شد");
+    async function saveWallet() {
+      const wallet = document.getElementById('walletInput').value.trim();
+      const email = localStorage.getItem('tt_email');
+      if (!email) return alert('لطفا ابتدا ایمیل ذخیره کنید');
+      const { error } = await client.from('users').update({ wallet }).eq('email', email);
+      if (error) return alert('خطا در ذخیره کیف پول');
+      const refCode = email.split('@')[0];
+      const link = `${window.location.origin}?ref=${refCode}`;
+      document.getElementById('referralLink').innerText = link;
+      alert('ذخیره شد');
+    }
+
+    async function loadDashboard() {
+      const email = localStorage.getItem('tt_email');
+      if (!email) return;
+      const { data, error } = await client.from('users').select('points').eq('email', email).single();
+      if (data) document.getElementById('totalStars').innerText = data.points || 0;
     }
   </script></body>
 </html>
